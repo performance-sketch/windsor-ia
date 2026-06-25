@@ -17,14 +17,12 @@
   --gold:    #F0A020;
   --meta:    #8B7CF8;
   --google:  #4DAAFF;
+  --ga4:     #34D399;
   --pos:     #1FD98A;
   --neg:     #FF5A72;
 }
-
 *,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
-
 html { background: var(--ground); }
-
 body {
   background: var(--ground);
   color: var(--text);
@@ -34,28 +32,18 @@ body {
   min-height: 100vh;
 }
 
-/* ─── Topographic card texture (the aesthetic risk) ────────────────────────── */
-/* Concentric irregular contour curves referencing Rio's dramatic terrain.
-   At 5-6% opacity it's subliminal — felt, not seen. Justified only for a
-   business whose product is overflying this terrain. */
+/* ── Topographic texture ─────────────────────────────────────────────────── */
 .topo {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='210'%3E%3Cellipse cx='160' cy='105' rx='155' ry='98' fill='none' stroke='%2300C8B0' stroke-width='0.6' opacity='0.055'/%3E%3Cellipse cx='160' cy='105' rx='124' ry='74' fill='none' stroke='%2300C8B0' stroke-width='0.6' opacity='0.055'/%3E%3Cellipse cx='160' cy='105' rx='94' ry='53' fill='none' stroke='%2300C8B0' stroke-width='0.6' opacity='0.055'/%3E%3Cellipse cx='160' cy='105' rx='64' ry='34' fill='none' stroke='%2300C8B0' stroke-width='0.6' opacity='0.055'/%3E%3Cellipse cx='160' cy='105' rx='34' ry='17' fill='none' stroke='%2300C8B0' stroke-width='0.6' opacity='0.055'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='210'%3E%3Cellipse cx='160' cy='105' rx='155' ry='98' fill='none' stroke='%2300C8B0' stroke-width='0.6' opacity='0.05'/%3E%3Cellipse cx='160' cy='105' rx='124' ry='74' fill='none' stroke='%2300C8B0' stroke-width='0.6' opacity='0.05'/%3E%3Cellipse cx='160' cy='105' rx='94' ry='53' fill='none' stroke='%2300C8B0' stroke-width='0.6' opacity='0.05'/%3E%3Cellipse cx='160' cy='105' rx='64' ry='34' fill='none' stroke='%2300C8B0' stroke-width='0.6' opacity='0.05'/%3E%3Cellipse cx='160' cy='105' rx='34' ry='17' fill='none' stroke='%2300C8B0' stroke-width='0.6' opacity='0.05'/%3E%3C/svg%3E");
   background-size: 320px 210px;
 }
 
-/* ─── Layout shell ──────────────────────────────────────────────────────────── */
-.app {
-  display: grid;
-  grid-template-rows: auto auto 1fr;
-  min-height: 100vh;
-}
-
-/* ─── Header ────────────────────────────────────────────────────────────────── */
+/* ── Header ──────────────────────────────────────────────────────────────── */
 header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 18px 28px 16px;
+  padding: 16px 28px 14px;
   border-bottom: 1px solid var(--border);
   position: relative;
 }
@@ -64,307 +52,152 @@ header::after {
   position: absolute;
   bottom: -1px; left: 0; right: 0;
   height: 1px;
-  background: linear-gradient(90deg, var(--accent) 0%, transparent 60%);
-  opacity: 0.35;
-  pointer-events: none;
+  background: linear-gradient(90deg, var(--accent) 0%, transparent 55%);
+  opacity: 0.3;
 }
-
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
+.brand { display: flex; align-items: center; gap: 12px; }
 .brand-glyph {
-  width: 32px; height: 32px;
-  border: 1px solid rgba(0,200,176,0.4);
+  width: 30px; height: 30px;
+  border: 1px solid rgba(0,200,176,0.35);
   border-radius: 3px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 17px;
-  color: var(--accent);
-  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; color: var(--accent);
 }
-.brand-name {
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--text);
-}
-.brand-sub {
-  font-size: 9px;
-  letter-spacing: 0.28em;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-top: 1px;
-}
-
-.header-meta {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-.date-range {
-  font-size: 10px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
+.brand-name { font-size: 12px; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; }
+.brand-sub  { font-size: 9px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--muted); margin-top: 1px; }
+.header-meta { display: flex; align-items: center; gap: 12px; }
+.date-range  { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
 .status-badge {
-  font-size: 9px;
+  font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase;
+  padding: 3px 8px 2px; border-radius: 2px; border: 1px solid var(--dim); color: var(--muted);
+}
+.status-badge.live   { color: var(--pos); border-color: rgba(31,217,138,.35); background: rgba(31,217,138,.07); }
+.status-badge.loading{ animation: breathe 1.4s ease-in-out infinite; }
+
+/* ── Tab nav ─────────────────────────────────────────────────────────────── */
+.tab-nav {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+  background: var(--panel);
+  padding: 0 28px;
+}
+.tab-btn {
+  padding: 12px 20px 11px;
+  font-size: 10px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  padding: 3px 8px 2px;
-  border-radius: 2px;
-  border: 1px solid var(--dim);
   color: var(--muted);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  transition: color 0.15s;
+  margin-bottom: -1px;
 }
-.status-badge.live {
-  color: var(--pos);
-  border-color: rgba(31,217,138,0.35);
-  background: rgba(31,217,138,0.07);
+.tab-btn:hover { color: var(--text); }
+.tab-btn.active { color: var(--text); border-bottom-color: var(--tab-color, var(--accent)); }
+.tab-btn .dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--tab-color, var(--accent));
+  opacity: 0.7;
 }
-.status-badge.loading {
-  animation: breathe 1.4s ease-in-out infinite;
-}
+.tab-btn.active .dot { opacity: 1; }
 
-/* ─── KPI row ───────────────────────────────────────────────────────────────── */
+/* ── Tab panels ──────────────────────────────────────────────────────────── */
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* ── KPI row ─────────────────────────────────────────────────────────────── */
 .kpi-row {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   border-bottom: 1px solid var(--border);
 }
 .kpi-row > * + * { border-left: 1px solid var(--border); }
-
 .kpi {
   background: var(--panel);
-  padding: 22px 24px 18px;
-  position: relative;
-  overflow: hidden;
+  padding: 20px 22px 16px;
+  position: relative; overflow: hidden;
 }
 .kpi::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0;
+  content: ''; position: absolute; top: 0; left: 0;
   width: 2px; height: 100%;
+  background: var(--kpi-color, var(--accent));
 }
-.kpi.c-teal::before  { background: var(--accent); }
-.kpi.c-gold::before  { background: var(--gold); }
-.kpi.c-meta::before  { background: var(--meta); }
-.kpi.c-google::before{ background: var(--google); }
-
-.kpi-eyebrow {
-  font-size: 9px;
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-bottom: 9px;
-}
+.kpi-eyebrow { font-size: 9px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
 .kpi-value {
-  font-size: 30px;
-  font-weight: 300;
-  font-variant-numeric: tabular-nums;
-  letter-spacing: -0.02em;
-  color: var(--text);
-  line-height: 1;
-  transition: opacity 0.3s;
+  font-size: 28px; font-weight: 300; font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em; color: var(--text); line-height: 1;
 }
 .kpi-value b { font-weight: 600; }
-.kpi-unit {
-  font-size: 13px;
-  font-weight: 300;
-  color: var(--muted);
-  margin-right: 1px;
-}
-.kpi-sub {
-  margin-top: 7px;
-  font-size: 10px;
-  color: var(--muted);
-  letter-spacing: 0.02em;
-}
+.kpi-unit { font-size: 12px; font-weight: 300; color: var(--muted); margin-right: 1px; }
+.kpi-sub  { margin-top: 6px; font-size: 10px; color: var(--muted); }
 
-/* ─── Main body ─────────────────────────────────────────────────────────────── */
-.body {
-  padding: 22px 28px 28px;
-  display: grid;
-  grid-template-rows: auto auto;
-  gap: 18px;
-}
-
-.card {
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: 3px;
-  padding: 20px 22px;
-  overflow: hidden;
-}
-
+/* ── Body ────────────────────────────────────────────────────────────────── */
+.body { padding: 20px 28px 28px; display: flex; flex-direction: column; gap: 16px; }
+.card { background: var(--panel); border: 1px solid var(--border); border-radius: 3px; padding: 18px 20px; overflow: hidden; }
 .card-label {
-  font-size: 9px;
-  letter-spacing: 0.26em;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-bottom: 16px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
+  font-size: 9px; letter-spacing: 0.26em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 14px;
+  display: flex; align-items: center; gap: 10px;
 }
-.card-label::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: var(--border);
-}
+.card-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
-/* ─── Bottom grid ───────────────────────────────────────────────────────────── */
-.bottom-grid {
-  display: grid;
-  grid-template-columns: 300px 1fr;
-  gap: 18px;
-}
+/* ── Two-col grid ────────────────────────────────────────────────────────── */
+.two-col { display: grid; grid-template-columns: 280px 1fr; gap: 16px; }
 
-/* ─── Platform/source breakdown ─────────────────────────────────────────────── */
-.bar-list {
-  display: flex;
-  flex-direction: column;
-  gap: 11px;
-}
-.bar-row {
-  display: grid;
-  grid-template-columns: 72px 1fr 74px 36px;
-  align-items: center;
-  gap: 8px;
-}
-.bar-label {
-  font-size: 10px;
-  letter-spacing: 0.06em;
-  color: var(--muted);
-  text-transform: uppercase;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.bar-track {
-  height: 5px;
-  background: var(--surface);
-  border-radius: 3px;
-  overflow: hidden;
-}
-.bar-fill {
-  height: 100%;
-  border-radius: 3px;
-}
-.bar-val {
-  font-size: 11px;
-  color: var(--text);
-  font-variant-numeric: tabular-nums;
-  text-align: right;
-}
-.bar-pct {
-  font-size: 10px;
-  color: var(--muted);
-  text-align: right;
-}
+/* ── Bar rows ────────────────────────────────────────────────────────────── */
+.bar-list { display: flex; flex-direction: column; gap: 10px; }
+.bar-row  { display: grid; grid-template-columns: 80px 1fr 72px 36px; align-items: center; gap: 8px; }
+.bar-label { font-size: 10px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bar-track { height: 5px; background: var(--surface); border-radius: 3px; overflow: hidden; }
+.bar-fill  { height: 100%; border-radius: 3px; }
+.bar-val   { font-size: 11px; color: var(--text); font-variant-numeric: tabular-nums; text-align: right; }
+.bar-pct   { font-size: 10px; color: var(--muted); text-align: right; }
 
-/* ─── Campaign table ─────────────────────────────────────────────────────────── */
-.camp-rows {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-.camp-item {}
-.camp-header {
-  display: grid;
-  grid-template-columns: 1fr 80px 68px;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 4px;
-}
-.camp-name {
-  font-size: 11px;
-  color: var(--text);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-.camp-dot {
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-.camp-spend {
-  font-size: 11px;
-  color: var(--text);
-  font-variant-numeric: tabular-nums;
-  text-align: right;
-}
-.camp-clicks {
-  font-size: 10px;
-  color: var(--muted);
-  font-variant-numeric: tabular-nums;
-  text-align: right;
-}
-.camp-track {
-  height: 2px;
-  background: var(--surface);
-  border-radius: 1px;
-  overflow: hidden;
-}
-.camp-fill {
-  height: 100%;
-  border-radius: 1px;
-  opacity: 0.65;
-}
+/* ── Camp rows ───────────────────────────────────────────────────────────── */
+.camp-rows { display: flex; flex-direction: column; gap: 9px; }
+.camp-header { display: grid; grid-template-columns: 1fr 80px 68px; align-items: center; gap: 8px; margin-bottom: 3px; }
+.camp-name  { font-size: 11px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 6px; }
+.camp-dot   { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+.camp-spend { font-size: 11px; color: var(--text); font-variant-numeric: tabular-nums; text-align: right; }
+.camp-clicks{ font-size: 10px; color: var(--muted); text-align: right; }
+.camp-track { height: 2px; background: var(--surface); border-radius: 1px; overflow: hidden; }
+.camp-fill  { height: 100%; border-radius: 1px; opacity: 0.65; }
 
-/* ─── Error / loading states ────────────────────────────────────────────────── */
+/* ── Sessions table ──────────────────────────────────────────────────────── */
+.src-table { width: 100%; border-collapse: collapse; }
+.src-table th {
+  font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--muted); font-weight: 400; padding: 0 8px 10px 0; text-align: left; border-bottom: 1px solid var(--border);
+}
+.src-table th:last-child, .src-table td:last-child { text-align: right; padding-right: 0; }
+.src-table td { padding: 8px 8px 0 0; font-size: 11px; color: var(--text); font-variant-numeric: tabular-nums; vertical-align: middle; }
+.src-table td.dim { color: var(--muted); font-size: 10px; }
+.src-table .mini-bar { height: 3px; background: var(--surface); border-radius: 2px; overflow: hidden; margin-top: 4px; }
+.src-table .mini-fill{ height: 100%; border-radius: 2px; }
+
+/* ── Error / states ──────────────────────────────────────────────────────── */
 .error-banner {
-  background: rgba(255,90,114,0.08);
-  border: 1px solid rgba(255,90,114,0.25);
-  border-radius: 3px;
-  padding: 8px 14px;
-  font-size: 11px;
-  color: var(--neg);
-  letter-spacing: 0.04em;
-  margin-bottom: 18px;
-}
-.skeleton {
-  background: linear-gradient(90deg, var(--panel) 0%, var(--surface) 45%, var(--panel) 100%);
-  background-size: 300% 100%;
-  animation: shimmer 1.6s ease-in-out infinite;
-  border-radius: 3px;
+  background: rgba(255,90,114,.08); border: 1px solid rgba(255,90,114,.25);
+  border-radius: 3px; padding: 8px 14px; font-size: 11px; color: var(--neg);
+  margin-bottom: 16px; display: none;
 }
 
-/* ─── Animations ─────────────────────────────────────────────────────────────── */
-/* One orchestrated entry moment: section cards fade-up sequentially */
-.fade-in { animation: fadeUp 0.45s cubic-bezier(0.16,1,0.3,1) both; }
-
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(10px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-@keyframes shimmer {
-  0%   { background-position: 100% 0; }
-  100% { background-position: -100% 0; }
-}
-@keyframes breathe {
-  0%,100% { opacity: 1; }
-  50%      { opacity: 0.35; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .fade-in, .skeleton, .status-badge { animation: none !important; }
-}
-
+/* ── Animations ──────────────────────────────────────────────────────────── */
+.fade-in { animation: fadeUp .4s cubic-bezier(.16,1,.3,1) both; }
+@keyframes fadeUp   { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
+@keyframes breathe  { 0%,100% { opacity:1; } 50% { opacity:.35; } }
+@media (prefers-reduced-motion: reduce) { .fade-in, .status-badge { animation: none !important; } }
 canvas { display: block; width: 100%; }
 </style>
 </head>
 <body>
-<div class="app">
 
-<!-- ── Header ───────────────────────────────────────────────────────────────── -->
+<!-- ── Header ──────────────────────────────────────────────────────────── -->
 <header>
   <div class="brand">
     <div class="brand-glyph">✈</div>
@@ -379,393 +212,524 @@ canvas { display: block; width: 100%; }
   </div>
 </header>
 
-<!-- ── KPI row ──────────────────────────────────────────────────────────────── -->
-<div class="kpi-row">
-  <div class="kpi c-teal topo">
-    <div class="kpi-eyebrow">Investimento Total</div>
-    <div class="kpi-value" id="kv-spend"><span class="kpi-unit">R$</span> <b>—</b></div>
-    <div class="kpi-sub" id="ks-spend">Meta + Google Ads</div>
+<!-- ── Tab navigation ──────────────────────────────────────────────────── -->
+<nav class="tab-nav">
+  <button class="tab-btn active" data-tab="meta"   style="--tab-color:var(--meta)">
+    <span class="dot"></span>Meta Ads
+  </button>
+  <button class="tab-btn"        data-tab="google" style="--tab-color:var(--google)">
+    <span class="dot"></span>Google Ads
+  </button>
+  <button class="tab-btn"        data-tab="ga4"    style="--tab-color:var(--ga4)">
+    <span class="dot"></span>Analytics
+  </button>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- TAB: META ADS                                                          -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<div class="tab-panel active" id="tab-meta">
+  <div class="kpi-row">
+    <div class="kpi topo" style="--kpi-color:var(--meta)">
+      <div class="kpi-eyebrow">Investimento Meta</div>
+      <div class="kpi-value" id="m-spend"><span class="kpi-unit">R$</span> <b>—</b></div>
+      <div class="kpi-sub" id="m-spend-sub">últimos 7 dias</div>
+    </div>
+    <div class="kpi topo" style="--kpi-color:var(--meta)">
+      <div class="kpi-eyebrow">Cliques</div>
+      <div class="kpi-value" id="m-clicks"><b>—</b></div>
+      <div class="kpi-sub" id="m-clicks-sub">total pago</div>
+    </div>
+    <div class="kpi topo" style="--kpi-color:var(--meta)">
+      <div class="kpi-eyebrow">CPC Médio</div>
+      <div class="kpi-value" id="m-cpc"><span class="kpi-unit">R$</span> <b>—</b></div>
+      <div class="kpi-sub">custo por clique</div>
+    </div>
+    <div class="kpi topo" style="--kpi-color:var(--meta)">
+      <div class="kpi-eyebrow">Campanhas Ativas</div>
+      <div class="kpi-value" id="m-camps"><b>—</b></div>
+      <div class="kpi-sub">com gasto no período</div>
+    </div>
   </div>
-  <div class="kpi c-gold topo">
-    <div class="kpi-eyebrow">Cliques Pagos</div>
-    <div class="kpi-value" id="kv-clicks"><b>—</b></div>
-    <div class="kpi-sub" id="ks-clicks">últimos 7 dias</div>
-  </div>
-  <div class="kpi c-meta topo">
-    <div class="kpi-eyebrow">Sessões GA4</div>
-    <div class="kpi-value" id="kv-sessions"><b>—</b></div>
-    <div class="kpi-sub" id="ks-sessions">todas as fontes</div>
-  </div>
-  <div class="kpi c-google topo">
-    <div class="kpi-eyebrow">CPC Médio</div>
-    <div class="kpi-value" id="kv-cpc"><span class="kpi-unit">R$</span> <b>—</b></div>
-    <div class="kpi-sub" id="ks-cpc">custo por clique</div>
+
+  <div class="body">
+    <div id="errBanner" class="error-banner"></div>
+
+    <div class="card topo fade-in" style="animation-delay:.04s">
+      <div class="card-label">Investimento Diário — Meta Ads</div>
+      <canvas id="chartMeta" height="150"></canvas>
+    </div>
+
+    <div class="two-col">
+      <div class="card topo fade-in" style="animation-delay:.08s">
+        <div class="card-label">Cliques por Campanha</div>
+        <div class="bar-list" id="metaClickBars"></div>
+      </div>
+      <div class="card topo fade-in" style="animation-delay:.12s">
+        <div class="card-label">Top Campanhas — Investimento</div>
+        <div class="camp-rows" id="metaCamps"></div>
+      </div>
+    </div>
   </div>
 </div>
 
-<!-- ── Body ─────────────────────────────────────────────────────────────────── -->
-<div class="body">
-  <div id="errBanner" style="display:none"></div>
-
-  <!-- Daily trend -->
-  <div class="card topo fade-in" style="animation-delay:0.04s">
-    <div class="card-label">Tendência Diária — Investimento × Sessões</div>
-    <canvas id="chartDaily" height="160"></canvas>
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- TAB: GOOGLE ADS                                                        -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<div class="tab-panel" id="tab-google">
+  <div class="kpi-row">
+    <div class="kpi topo" style="--kpi-color:var(--google)">
+      <div class="kpi-eyebrow">Investimento Google</div>
+      <div class="kpi-value" id="g-spend"><span class="kpi-unit">R$</span> <b>—</b></div>
+      <div class="kpi-sub">últimos 7 dias</div>
+    </div>
+    <div class="kpi topo" style="--kpi-color:var(--google)">
+      <div class="kpi-eyebrow">Cliques</div>
+      <div class="kpi-value" id="g-clicks"><b>—</b></div>
+      <div class="kpi-sub">total pago</div>
+    </div>
+    <div class="kpi topo" style="--kpi-color:var(--google)">
+      <div class="kpi-eyebrow">CPC Médio</div>
+      <div class="kpi-value" id="g-cpc"><span class="kpi-unit">R$</span> <b>—</b></div>
+      <div class="kpi-sub">custo por clique</div>
+    </div>
+    <div class="kpi topo" style="--kpi-color:var(--google)">
+      <div class="kpi-eyebrow">Campanhas Ativas</div>
+      <div class="kpi-value" id="g-camps"><b>—</b></div>
+      <div class="kpi-sub">com gasto no período</div>
+    </div>
   </div>
 
-  <!-- Bottom row -->
-  <div class="bottom-grid">
+  <div class="body">
+    <div class="card topo fade-in" style="animation-delay:.04s">
+      <div class="card-label">Investimento Diário — Google Ads</div>
+      <canvas id="chartGoogle" height="150"></canvas>
+    </div>
 
-    <!-- Left: platform + sessions breakdown -->
-    <div class="card topo fade-in" style="animation-delay:0.09s">
-      <div class="card-label">Investimento por Plataforma</div>
-      <div class="bar-list" id="platformBars"></div>
-
-      <div style="margin-top:20px">
-        <div class="card-label">Sessões por Canal</div>
-        <div class="bar-list" id="sourceBars"></div>
+    <div class="two-col">
+      <div class="card topo fade-in" style="animation-delay:.08s">
+        <div class="card-label">Cliques por Campanha</div>
+        <div class="bar-list" id="googleClickBars"></div>
+      </div>
+      <div class="card topo fade-in" style="animation-delay:.12s">
+        <div class="card-label">Top Campanhas — Investimento</div>
+        <div class="camp-rows" id="googleCamps"></div>
       </div>
     </div>
+  </div>
+</div>
 
-    <!-- Right: top campaigns -->
-    <div class="card topo fade-in" style="animation-delay:0.14s">
-      <div class="card-label">Top Campanhas — Investimento 7d</div>
-      <div class="camp-rows" id="campList"></div>
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- TAB: ANALYTICS (GA4)                                                   -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<div class="tab-panel" id="tab-ga4">
+  <div class="kpi-row">
+    <div class="kpi topo" style="--kpi-color:var(--ga4)">
+      <div class="kpi-eyebrow">Sessões Totais</div>
+      <div class="kpi-value" id="a-sessions"><b>—</b></div>
+      <div class="kpi-sub">todas as fontes · 7d</div>
+    </div>
+    <div class="kpi topo" style="--kpi-color:var(--ga4)">
+      <div class="kpi-eyebrow">Sessões / Dia</div>
+      <div class="kpi-value" id="a-avg"><b>—</b></div>
+      <div class="kpi-sub">média diária</div>
+    </div>
+    <div class="kpi topo" style="--kpi-color:var(--ga4)">
+      <div class="kpi-eyebrow">Principal Canal</div>
+      <div class="kpi-value" id="a-top-src" style="font-size:20px"><b>—</b></div>
+      <div class="kpi-sub" id="a-top-src-sub">maior volume</div>
+    </div>
+    <div class="kpi topo" style="--kpi-color:var(--ga4)">
+      <div class="kpi-eyebrow">Canais Ativos</div>
+      <div class="kpi-value" id="a-srcs"><b>—</b></div>
+      <div class="kpi-sub">fontes distintas</div>
+    </div>
+  </div>
+
+  <div class="body">
+    <div class="card topo fade-in" style="animation-delay:.04s">
+      <div class="card-label">Sessões por Dia — GA4</div>
+      <canvas id="chartGA4" height="150"></canvas>
     </div>
 
+    <div class="two-col">
+      <div class="card topo fade-in" style="animation-delay:.08s">
+        <div class="card-label">Sessões por Canal</div>
+        <div class="bar-list" id="ga4SourceBars"></div>
+      </div>
+      <div class="card topo fade-in" style="animation-delay:.12s">
+        <div class="card-label">Top Campanhas / Origens — Sessões</div>
+        <div style="overflow-x:auto">
+          <table class="src-table" id="ga4CampTable">
+            <thead><tr>
+              <th>Campanha</th><th>Fonte</th><th>Sessões</th>
+            </tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
   </div>
-</div><!-- .body -->
-</div><!-- .app -->
+</div>
 
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
 <script>
 (function () {
   'use strict';
 
-  /* ── Config ─────────────────────────────────────────────────────────────── */
   const API = 'https://connectors.windsor.ai/all'
     + '?api_key=2a3b6cc17507c2540c6b98c651a31cd95d6b'
     + '&date_preset=last_7d'
     + '&fields=date,datasource,account_name,source,campaign,clicks,sessions,spend';
 
-  /* ── Design tokens (mirrors CSS) ────────────────────────────────────────── */
   const C = {
-    border:  '#162436',
-    muted:   '#3D5878',
-    text:    '#C4D4EC',
-    surface: '#0F1F33',
-    accent:  '#00C8B0',
-    gold:    '#F0A020',
-    meta:    '#8B7CF8',
-    google:  '#4DAAFF',
+    border:'#162436', muted:'#3D5878', text:'#C4D4EC', surface:'#0F1F33',
+    accent:'#00C8B0', gold:'#F0A020', meta:'#8B7CF8', google:'#4DAAFF', ga4:'#34D399',
   };
 
-  /* ── Formatters ─────────────────────────────────────────────────────────── */
   const f = {
-    brl:  n => 'R$ ' + Math.round(n).toLocaleString('pt-BR'),
-    brl2: n => n.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+    brl:  n => 'R$ ' + Math.round(n).toLocaleString('pt-BR'),
+    brl2: n => n.toLocaleString('pt-BR', {minimumFractionDigits:2,maximumFractionDigits:2}),
     num:  n => Math.round(n).toLocaleString('pt-BR'),
     pct:  n => n.toFixed(1) + '%',
     dd:   s => { const [,m,d] = s.split('-'); return `${d}/${m}`; },
   };
 
-  /* ── Data processing ─────────────────────────────────────────────────────── */
+  /* ── Tab switching ─────────────────────────────────────────────────────── */
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+      if (window._charts) redrawActive();
+    });
+  });
+
+  /* ── Process ───────────────────────────────────────────────────────────── */
   function process(rows) {
-    const paidRows   = rows.filter(r => r.spend  != null && r.spend  > 0);
-    const ga4Rows    = rows.filter(r => r.datasource === 'googleanalytics4');
-    const metaRows   = paidRows.filter(r => r.datasource === 'facebook');
-    const googleRows = paidRows.filter(r => r.datasource === 'google_ads');
+    const meta   = rows.filter(r => r.datasource === 'facebook'        && r.spend > 0);
+    const google = rows.filter(r => r.datasource === 'google_ads'      && r.spend > 0);
+    const ga4    = rows.filter(r => r.datasource === 'googleanalytics4');
 
-    const sum = (arr, key) => arr.reduce((s, r) => s + (r[key] || 0), 0);
-
-    const totalSpend   = sum(paidRows,   'spend');
-    const totalClicks  = sum(paidRows,   'clicks');
-    const totalSess    = sum(ga4Rows,    'sessions');
-    const metaSpend    = sum(metaRows,   'spend');
-    const googleSpend  = sum(googleRows, 'spend');
-    const cpc          = totalClicks > 0 ? totalSpend / totalClicks : 0;
-
-    /* Daily aggregation */
     const dates = [...new Set(rows.map(r => r.date).filter(Boolean))].sort();
-    const daily = dates.map(d => ({
-      date:    d,
-      meta:    metaRows.filter(r => r.date === d).reduce((s,r) => s+(r.spend||0), 0),
-      google:  googleRows.filter(r => r.date === d).reduce((s,r) => s+(r.spend||0), 0),
-      sessions:ga4Rows.filter(r => r.date === d).reduce((s,r) => s+(r.sessions||0), 0),
+    const sum   = (arr, k) => arr.reduce((s,r) => s + (r[k]||0), 0);
+
+    /* Meta daily */
+    const metaDaily = dates.map(d => ({
+      date: d,
+      spend: meta.filter(r => r.date===d).reduce((s,r)=>s+r.spend,0),
+      clicks:meta.filter(r => r.date===d).reduce((s,r)=>s+(r.clicks||0),0),
     }));
 
-    /* Session sources */
-    const srcMap = {};
-    ga4Rows.forEach(r => {
-      let k = (r.source || '(other)')
-        .replace(/^\(/, '').replace(/\)$/, '')
-        .split('.')[0]
-        .split('/')[0];
-      k = k === 'direct' ? 'Direto' : k === 'not set' ? 'Outros' : k;
-      srcMap[k] = (srcMap[k] || 0) + (r.sessions || 0);
-    });
-    const topSrc = Object.entries(srcMap).sort((a,b) => b[1]-a[1]).slice(0, 5);
+    /* Google daily */
+    const googleDaily = dates.map(d => ({
+      date:  d,
+      spend: google.filter(r=>r.date===d).reduce((s,r)=>s+r.spend,0),
+      clicks:google.filter(r=>r.date===d).reduce((s,r)=>s+(r.clicks||0),0),
+    }));
 
-    /* Campaign aggregation */
-    const campMap = {};
-    paidRows.forEach(r => {
-      if (!r.campaign) return;
-      if (!campMap[r.campaign]) campMap[r.campaign] = { spend: 0, clicks: 0, ds: r.datasource };
-      campMap[r.campaign].spend  += r.spend;
-      campMap[r.campaign].clicks += r.clicks || 0;
-    });
-    const topCamps = Object.entries(campMap)
-      .map(([name, d]) => ({ name, ...d }))
-      .sort((a,b) => b.spend - a.spend)
-      .slice(0, 8);
+    /* GA4 daily */
+    const ga4Daily = dates.map(d => ({
+      date:     d,
+      sessions: ga4.filter(r=>r.date===d).reduce((s,r)=>s+(r.sessions||0),0),
+    }));
 
-    return { totalSpend, totalClicks, totalSess, metaSpend, googleSpend, cpc,
-             daily, dates, topSrc, topCamps };
-  }
-
-  /* ── Render: KPIs ─────────────────────────────────────────────────────────── */
-  function renderKPIs(d) {
-    function set(id, html, sub) {
-      document.getElementById('kv-' + id).innerHTML = html;
-      if (sub) document.getElementById('ks-' + id).textContent = sub;
+    /* Campaign aggregations */
+    function campAgg(arr) {
+      const m = {};
+      arr.forEach(r => {
+        const k = r.campaign || '(sem nome)';
+        if (!m[k]) m[k] = { spend:0, clicks:0 };
+        m[k].spend  += r.spend  || 0;
+        m[k].clicks += r.clicks || 0;
+      });
+      return Object.entries(m).map(([n,d])=>({name:n,...d})).sort((a,b)=>b.spend-a.spend);
     }
-    set('spend',
-      `<span class="kpi-unit">R$</span> <b>${Math.round(d.totalSpend).toLocaleString('pt-BR')}</b>`,
-      `Meta ${f.brl(d.metaSpend)} · Google ${f.brl(d.googleSpend)}`);
-    set('clicks',
-      `<b>${f.num(d.totalClicks)}</b>`);
-    set('sessions',
-      `<b>${f.num(d.totalSess)}</b>`);
-    set('cpc',
-      `<span class="kpi-unit">R$</span> <b>${f.brl2(d.cpc)}</b>`);
+
+    /* GA4 source aggregation */
+    const srcMap = {};
+    ga4.forEach(r => {
+      let k = (r.source||'(other)').replace(/^\(/,'').replace(/\)$/,'').split('.')[0].split('/')[0];
+      k = k==='direct'?'Direto': k==='not set'?'Outros': k;
+      srcMap[k] = (srcMap[k]||0) + (r.sessions||0);
+    });
+    const ga4Sources = Object.entries(srcMap).sort((a,b)=>b[1]-a[1]);
+
+    /* GA4 top campaign+source */
+    const campSrcMap = {};
+    ga4.forEach(r => {
+      const key = (r.campaign||'—') + '|' + (r.source||'—');
+      if (!campSrcMap[key]) campSrcMap[key] = { camp: r.campaign||'—', src: r.source||'—', sessions:0 };
+      campSrcMap[key].sessions += r.sessions||0;
+    });
+    const ga4Camps = Object.values(campSrcMap).sort((a,b)=>b.sessions-a.sessions).slice(0,10);
+
+    return {
+      dates,
+      meta:   { rows: meta,   daily: metaDaily,   camps: campAgg(meta),   total: sum(meta,'spend'),   clicks: sum(meta,'clicks')   },
+      google: { rows: google, daily: googleDaily, camps: campAgg(google), total: sum(google,'spend'), clicks: sum(google,'clicks') },
+      ga4:    { rows: ga4,    daily: ga4Daily,    sources: ga4Sources,    camps: ga4Camps,            total: sum(ga4,'sessions')   },
+    };
   }
 
-  /* ── Render: Platform bars ───────────────────────────────────────────────── */
-  function renderPlatform(d) {
-    const total = d.metaSpend + d.googleSpend || 1;
-    const rows = [
-      { label: 'Meta',   val: d.metaSpend,   color: C.meta,   pct: d.metaSpend / total * 100 },
-      { label: 'Google', val: d.googleSpend, color: C.google, pct: d.googleSpend / total * 100 },
-    ];
-    document.getElementById('platformBars').innerHTML = rows.map(r => `
-      <div class="bar-row">
-        <span class="bar-label">${r.label}</span>
-        <div class="bar-track"><div class="bar-fill" style="width:${r.pct.toFixed(1)}%;background:${r.color}"></div></div>
-        <span class="bar-val">${f.brl(r.val)}</span>
-        <span class="bar-pct">${f.pct(r.pct)}</span>
-      </div>`).join('');
-
-    const maxSrc = d.topSrc[0]?.[1] || 1;
-    const srcColors = { ig: C.meta, facebook: C.meta, google: C.google,
-                        Direto: C.accent, 'linktr.ee': C.accent };
-    document.getElementById('sourceBars').innerHTML = d.topSrc.map(([src, n]) => {
-      const color = srcColors[src] || C.muted;
-      return `
-        <div class="bar-row">
-          <span class="bar-label" style="text-transform:none;font-size:10px">${src}</span>
-          <div class="bar-track"><div class="bar-fill" style="width:${(n/maxSrc*100).toFixed(1)}%;background:${color}"></div></div>
-          <span class="bar-val" style="font-size:11px">${f.num(n)}</span>
-          <span class="bar-pct" style="font-size:10px">${f.pct(n/d.totalSess*100)}</span>
-        </div>`;
-    }).join('');
-  }
-
-  /* ── Render: Campaigns ───────────────────────────────────────────────────── */
-  function renderCampaigns(d) {
-    const max = d.topCamps[0]?.spend || 1;
-    document.getElementById('campList').innerHTML = d.topCamps.map(c => {
-      const color = c.ds === 'facebook' ? C.meta : C.google;
-      const label = c.name
-        .replace(/\[([^\]]+)\]/g, (_, m) => m)
-        .replace(/\s+/g, ' ').trim().slice(0, 52);
-      return `
-        <div class="camp-item">
-          <div class="camp-header">
-            <span class="camp-name">
-              <span class="camp-dot" style="background:${color}"></span>${label}
-            </span>
-            <span class="camp-spend">${f.brl(c.spend)}</span>
-            <span class="camp-clicks">${f.num(c.clicks)} cliq.</span>
-          </div>
-          <div class="camp-track">
-            <div class="camp-fill" style="width:${(c.spend/max*100).toFixed(1)}%;background:${color}"></div>
-          </div>
-        </div>`;
-    }).join('');
-  }
-
-  /* ── Render: Daily trend chart ───────────────────────────────────────────── */
-  function drawDailyChart(daily) {
-    const canvas = document.getElementById('chartDaily');
+  /* ── Generic canvas bar+line chart ────────────────────────────────────── */
+  function drawBarChart(canvasId, labels, barVals, lineVals, barColor, lineColor, barLabel, lineLabel) {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) return;
     const dpr = window.devicePixelRatio || 1;
-    const W   = canvas.parentElement.clientWidth - 44;
-    const H   = 160;
-    canvas.width  = W * dpr;
-    canvas.height = H * dpr;
-    canvas.style.width  = W + 'px';
-    canvas.style.height = H + 'px';
+    const W   = canvas.parentElement.clientWidth - 40;
+    const H   = 150;
+    canvas.width  = W * dpr; canvas.height = H * dpr;
+    canvas.style.width = W+'px'; canvas.style.height = H+'px';
     const ctx = canvas.getContext('2d');
     ctx.scale(dpr, dpr);
 
-    const PAD = { t: 14, r: 56, b: 28, l: 56 };
+    const PAD = { t:14, r: lineVals ? 52 : 10, b:26, l:52 };
     const cW  = W - PAD.l - PAD.r;
     const cH  = H - PAD.t - PAD.b;
-    const n   = daily.length;
+    const n   = labels.length;
     if (!n) return;
 
-    const barW   = Math.min(cW / n * 0.48, 26);
-    const maxSp  = Math.max(...daily.map(d => d.meta + d.google)) * 1.18 || 1;
-    const maxSs  = Math.max(...daily.map(d => d.sessions)) * 1.2 || 1;
-
-    const xOf  = i => PAD.l + (i + 0.5) * (cW / n);
-    const ySpend = v => PAD.t + cH - (v / maxSp) * cH;
-    const ySess  = v => PAD.t + cH - (v / maxSs) * cH;
+    const maxBar  = Math.max(...barVals) * 1.15 || 1;
+    const maxLine = lineVals ? Math.max(...lineVals) * 1.2 || 1 : 1;
+    const barW    = Math.min(cW / n * 0.5, 28);
+    const xOf     = i => PAD.l + (i + 0.5) * (cW / n);
+    const yBar    = v => PAD.t + cH - (v / maxBar) * cH;
+    const yLine   = v => PAD.t + cH - (v / maxLine) * cH;
 
     /* Grid */
-    ctx.strokeStyle = C.border;
-    ctx.lineWidth   = 0.5;
-    ctx.setLineDash([3, 4]);
-    for (let i = 0; i <= 3; i++) {
-      const y = PAD.t + (cH / 3) * i;
-      ctx.beginPath(); ctx.moveTo(PAD.l, y); ctx.lineTo(W - PAD.r, y); ctx.stroke();
+    ctx.strokeStyle = C.border; ctx.lineWidth = 0.5; ctx.setLineDash([3,4]);
+    for (let i=0; i<=3; i++) {
+      const y = PAD.t + (cH/3)*i;
+      ctx.beginPath(); ctx.moveTo(PAD.l,y); ctx.lineTo(W-PAD.r,y); ctx.stroke();
     }
     ctx.setLineDash([]);
 
-    /* Stacked bars */
-    daily.forEach((d, i) => {
-      const x  = xOf(i) - barW / 2;
-      const mH = (d.meta   / maxSp) * cH;
-      const gH = (d.google / maxSp) * cH;
-
-      /* Google (top of stack) */
-      ctx.fillStyle = C.google + 'AA';
-      ctx.fillRect(x, PAD.t + cH - mH - gH, barW, gH);
-
-      /* Meta (bottom of stack) */
-      ctx.fillStyle = C.meta + 'AA';
-      ctx.fillRect(x, PAD.t + cH - mH, barW, mH);
+    /* Bars */
+    barVals.forEach((v,i) => {
+      const bH = (v/maxBar)*cH;
+      ctx.fillStyle = barColor + 'AA';
+      ctx.fillRect(xOf(i)-barW/2, PAD.t+cH-bH, barW, bH);
     });
 
-    /* Sessions area fill */
-    ctx.beginPath();
-    daily.forEach((d, i) => {
-      const x = xOf(i), y = ySess(d.sessions);
-      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
-    });
-    ctx.lineTo(xOf(n-1), PAD.t + cH);
-    ctx.lineTo(xOf(0),   PAD.t + cH);
-    ctx.closePath();
-    const grad = ctx.createLinearGradient(0, PAD.t, 0, PAD.t + cH);
-    grad.addColorStop(0, C.accent + '28');
-    grad.addColorStop(1, C.accent + '00');
-    ctx.fillStyle = grad;
-    ctx.fill();
-
-    /* Sessions line */
-    ctx.beginPath();
-    ctx.strokeStyle = C.accent;
-    ctx.lineWidth   = 1.5;
-    daily.forEach((d, i) => {
-      const x = xOf(i), y = ySess(d.sessions);
-      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
-    });
-    ctx.stroke();
-
-    /* Sessions dots */
-    daily.forEach((d, i) => {
+    /* Area + line */
+    if (lineVals) {
       ctx.beginPath();
-      ctx.arc(xOf(i), ySess(d.sessions), 2.5, 0, Math.PI * 2);
-      ctx.fillStyle = C.accent;
-      ctx.fill();
-    });
+      lineVals.forEach((v,i) => { const x=xOf(i),y=yLine(v); i===0?ctx.moveTo(x,y):ctx.lineTo(x,y); });
+      ctx.lineTo(xOf(n-1), PAD.t+cH); ctx.lineTo(xOf(0), PAD.t+cH); ctx.closePath();
+      const g = ctx.createLinearGradient(0,PAD.t,0,PAD.t+cH);
+      g.addColorStop(0, lineColor+'22'); g.addColorStop(1, lineColor+'00');
+      ctx.fillStyle = g; ctx.fill();
 
-    /* X-axis labels */
-    ctx.fillStyle  = C.muted;
-    ctx.font       = '9px system-ui';
-    ctx.textAlign  = 'center';
-    daily.forEach((d, i) => ctx.fillText(f.dd(d.date), xOf(i), H - 5));
-
-    /* Left Y labels (spend) */
-    ctx.textAlign = 'right';
-    ctx.fillStyle = C.muted;
-    for (let i = 0; i <= 3; i++) {
-      const v = maxSp * (1 - i / 3);
-      const y = PAD.t + (cH / 3) * i;
-      ctx.fillText(v >= 1000 ? (v/1000).toFixed(1)+'k' : v.toFixed(0), PAD.l - 5, y + 4);
+      ctx.beginPath(); ctx.strokeStyle = lineColor; ctx.lineWidth = 1.5;
+      lineVals.forEach((v,i) => { const x=xOf(i),y=yLine(v); i===0?ctx.moveTo(x,y):ctx.lineTo(x,y); });
+      ctx.stroke();
+      lineVals.forEach((v,i) => {
+        ctx.beginPath(); ctx.arc(xOf(i),yLine(v),2.5,0,Math.PI*2);
+        ctx.fillStyle=lineColor; ctx.fill();
+      });
     }
 
-    /* Right Y labels (sessions) */
-    ctx.textAlign = 'left';
-    ctx.fillStyle = C.accent + 'BB';
-    for (let i = 0; i <= 3; i++) {
-      const v = maxSs * (1 - i / 3);
-      const y = PAD.t + (cH / 3) * i;
-      ctx.fillText(v >= 1000 ? (v/1000).toFixed(1)+'k' : Math.round(v), W - PAD.r + 6, y + 4);
+    /* X labels */
+    ctx.fillStyle = C.muted; ctx.font = '9px system-ui'; ctx.textAlign = 'center';
+    labels.forEach((l,i) => ctx.fillText(l, xOf(i), H-4));
+
+    /* Left Y */
+    ctx.textAlign = 'right';
+    for (let i=0; i<=3; i++) {
+      const v = maxBar*(1-i/3), y = PAD.t+(cH/3)*i;
+      ctx.fillText(v>=1000?(v/1000).toFixed(1)+'k':v.toFixed(0), PAD.l-5, y+4);
+    }
+
+    /* Right Y */
+    if (lineVals) {
+      ctx.textAlign = 'left'; ctx.fillStyle = lineColor+'BB';
+      for (let i=0; i<=3; i++) {
+        const v = maxLine*(1-i/3), y = PAD.t+(cH/3)*i;
+        ctx.fillText(v>=1000?(v/1000).toFixed(1)+'k':Math.round(v), W-PAD.r+5, y+4);
+      }
     }
 
     /* Legend */
-    const lItems = [[C.meta, 'Meta Ads'], [C.google, 'Google Ads'], [C.accent, 'Sessões']];
-    lItems.forEach(([color, label], i) => {
-      const lx = PAD.l + i * 100;
-      ctx.fillStyle = color + (i < 2 ? 'AA' : 'FF');
-      ctx.fillRect(lx, 5, 12, 5);
-      ctx.fillStyle = C.muted;
-      ctx.textAlign = 'left';
-      ctx.font = '9px system-ui';
-      ctx.fillText(label, lx + 16, 10);
+    const items = [[barColor, barLabel]];
+    if (lineVals) items.push([lineColor, lineLabel]);
+    items.forEach(([color,label],i) => {
+      const lx = PAD.l + i*110;
+      ctx.fillStyle = color+'AA'; ctx.fillRect(lx, 5, 12, 5);
+      ctx.fillStyle = C.muted; ctx.textAlign = 'left'; ctx.font = '9px system-ui';
+      ctx.fillText(label, lx+16, 10);
     });
   }
 
-  /* ── Date range header ───────────────────────────────────────────────────── */
+  /* ── Render: Meta tab ──────────────────────────────────────────────────── */
+  function renderMeta(d) {
+    const m = d.meta;
+    const cpc = m.clicks > 0 ? m.total / m.clicks : 0;
+    const uniqCamps = new Set(m.rows.map(r => r.campaign)).size;
+
+    document.getElementById('m-spend').innerHTML      = `<span class="kpi-unit">R$</span> <b>${Math.round(m.total).toLocaleString('pt-BR')}</b>`;
+    document.getElementById('m-clicks').innerHTML     = `<b>${f.num(m.clicks)}</b>`;
+    document.getElementById('m-cpc').innerHTML        = `<span class="kpi-unit">R$</span> <b>${f.brl2(cpc)}</b>`;
+    document.getElementById('m-camps').innerHTML      = `<b>${uniqCamps}</b>`;
+
+    const labels = m.daily.map(r => f.dd(r.date));
+    const spend  = m.daily.map(r => r.spend);
+    const clicks = m.daily.map(r => r.clicks);
+    drawBarChart('chartMeta', labels, spend, clicks, C.meta, C.accent, 'Investimento', 'Cliques');
+
+    /* Click bars */
+    const maxC = Math.max(...m.camps.map(c=>c.clicks)) || 1;
+    document.getElementById('metaClickBars').innerHTML = m.camps.slice(0,6).map(c => {
+      const label = shortName(c.name);
+      return `<div class="bar-row">
+        <span class="bar-label" title="${c.name}">${label}</span>
+        <div class="bar-track"><div class="bar-fill" style="width:${(c.clicks/maxC*100).toFixed(1)}%;background:${C.meta}"></div></div>
+        <span class="bar-val">${f.num(c.clicks)}</span>
+        <span class="bar-pct">${f.pct(c.clicks/m.clicks*100)}</span>
+      </div>`;
+    }).join('');
+
+    /* Camp list */
+    const maxS = m.camps[0]?.spend || 1;
+    document.getElementById('metaCamps').innerHTML = m.camps.slice(0,8).map(c => `
+      <div class="camp-item">
+        <div class="camp-header">
+          <span class="camp-name"><span class="camp-dot" style="background:${C.meta}"></span>${shortName(c.name, 50)}</span>
+          <span class="camp-spend">${f.brl(c.spend)}</span>
+          <span class="camp-clicks">${f.num(c.clicks)} cliq.</span>
+        </div>
+        <div class="camp-track"><div class="camp-fill" style="width:${(c.spend/maxS*100).toFixed(1)}%;background:${C.meta}"></div></div>
+      </div>`).join('');
+  }
+
+  /* ── Render: Google tab ────────────────────────────────────────────────── */
+  function renderGoogle(d) {
+    const g = d.google;
+    const cpc = g.clicks > 0 ? g.total / g.clicks : 0;
+    const uniqCamps = new Set(g.rows.map(r => r.campaign)).size;
+
+    document.getElementById('g-spend').innerHTML  = `<span class="kpi-unit">R$</span> <b>${Math.round(g.total).toLocaleString('pt-BR')}</b>`;
+    document.getElementById('g-clicks').innerHTML = `<b>${f.num(g.clicks)}</b>`;
+    document.getElementById('g-cpc').innerHTML    = `<span class="kpi-unit">R$</span> <b>${f.brl2(cpc)}</b>`;
+    document.getElementById('g-camps').innerHTML  = `<b>${uniqCamps}</b>`;
+
+    const labels = g.daily.map(r => f.dd(r.date));
+    const spend  = g.daily.map(r => r.spend);
+    const clicks = g.daily.map(r => r.clicks);
+    drawBarChart('chartGoogle', labels, spend, clicks, C.google, C.accent, 'Investimento', 'Cliques');
+
+    const maxC = Math.max(...g.camps.map(c=>c.clicks)) || 1;
+    document.getElementById('googleClickBars').innerHTML = g.camps.slice(0,6).map(c => `
+      <div class="bar-row">
+        <span class="bar-label" title="${c.name}">${shortName(c.name)}</span>
+        <div class="bar-track"><div class="bar-fill" style="width:${(c.clicks/maxC*100).toFixed(1)}%;background:${C.google}"></div></div>
+        <span class="bar-val">${f.num(c.clicks)}</span>
+        <span class="bar-pct">${f.pct(c.clicks/g.clicks*100)}</span>
+      </div>`).join('');
+
+    const maxS = g.camps[0]?.spend || 1;
+    document.getElementById('googleCamps').innerHTML = g.camps.slice(0,8).map(c => `
+      <div class="camp-item">
+        <div class="camp-header">
+          <span class="camp-name"><span class="camp-dot" style="background:${C.google}"></span>${shortName(c.name, 50)}</span>
+          <span class="camp-spend">${f.brl(c.spend)}</span>
+          <span class="camp-clicks">${f.num(c.clicks)} cliq.</span>
+        </div>
+        <div class="camp-track"><div class="camp-fill" style="width:${(c.spend/maxS*100).toFixed(1)}%;background:${C.google}"></div></div>
+      </div>`).join('');
+  }
+
+  /* ── Render: GA4 tab ───────────────────────────────────────────────────── */
+  function renderGA4(d) {
+    const a = d.ga4;
+    const avg   = a.daily.length > 0 ? a.total / a.daily.length : 0;
+    const topSrc= a.sources[0] || ['—', 0];
+
+    document.getElementById('a-sessions').innerHTML  = `<b>${f.num(a.total)}</b>`;
+    document.getElementById('a-avg').innerHTML       = `<b>${f.num(avg)}</b>`;
+    document.getElementById('a-top-src').innerHTML   = `<b>${topSrc[0]}</b>`;
+    document.getElementById('a-top-src-sub').textContent = `${f.num(topSrc[1])} sessões`;
+    document.getElementById('a-srcs').innerHTML      = `<b>${a.sources.length}</b>`;
+
+    const labels   = a.daily.map(r => f.dd(r.date));
+    const sessions = a.daily.map(r => r.sessions);
+    drawBarChart('chartGA4', labels, sessions, null, C.ga4, null, 'Sessões', null);
+
+    const maxS = a.sources[0]?.[1] || 1;
+    const srcColors = { ig: C.meta, facebook: C.meta, google: C.google, Direto: C.accent };
+    document.getElementById('ga4SourceBars').innerHTML = a.sources.slice(0,8).map(([src,n]) => {
+      const color = srcColors[src] || C.muted;
+      return `<div class="bar-row">
+        <span class="bar-label" style="text-transform:none">${src}</span>
+        <div class="bar-track"><div class="bar-fill" style="width:${(n/maxS*100).toFixed(1)}%;background:${color}"></div></div>
+        <span class="bar-val">${f.num(n)}</span>
+        <span class="bar-pct">${f.pct(n/a.total*100)}</span>
+      </div>`;
+    }).join('');
+
+    const tbody = document.querySelector('#ga4CampTable tbody');
+    tbody.innerHTML = a.camps.map(r => `
+      <tr>
+        <td title="${r.camp}">${shortName(r.camp, 38)}</td>
+        <td class="dim">${r.src}</td>
+        <td>${f.num(r.sessions)}</td>
+      </tr>`).join('');
+  }
+
+  /* ── Helpers ───────────────────────────────────────────────────────────── */
+  function shortName(s, max=22) {
+    const clean = (s||'').replace(/\[([^\]]+)\]/g, (_,m)=>m).replace(/\s+/g,' ').trim();
+    return clean.length > max ? clean.slice(0, max) + '…' : clean;
+  }
+
   function setHeader(dates) {
     if (!dates.length) return;
-    const first = f.dd(dates[0]);
-    const last  = f.dd(dates[dates.length - 1]);
-    const [y]   = dates[0].split('-');
-    document.getElementById('dateRange').textContent = `${first} – ${last} · ${y}`;
+    const [y] = dates[0].split('-');
+    document.getElementById('dateRange').textContent =
+      `${f.dd(dates[0])} – ${f.dd(dates[dates.length-1])} · ${y}`;
   }
 
-  /* ── Error banner ────────────────────────────────────────────────────────── */
-  function showError(msg) {
-    const el = document.getElementById('errBanner');
-    el.className = 'error-banner';
-    el.style.display = 'block';
-    el.textContent = msg;
+  function redrawActive() {
+    if (!window._data) return;
+    const active = document.querySelector('.tab-btn.active')?.dataset.tab;
+    if (active === 'meta')   drawBarChart('chartMeta',   window._data.meta.daily.map(r=>f.dd(r.date)),   window._data.meta.daily.map(r=>r.spend),   window._data.meta.daily.map(r=>r.clicks),   C.meta,   C.accent, 'Investimento','Cliques');
+    if (active === 'google') drawBarChart('chartGoogle', window._data.google.daily.map(r=>f.dd(r.date)), window._data.google.daily.map(r=>r.spend), window._data.google.daily.map(r=>r.clicks), C.google, C.accent, 'Investimento','Cliques');
+    if (active === 'ga4')    drawBarChart('chartGA4',    window._data.ga4.daily.map(r=>f.dd(r.date)),    window._data.ga4.daily.map(r=>r.sessions), null, C.ga4, null, 'Sessões', null);
   }
 
-  /* ── Main entry point ────────────────────────────────────────────────────── */
+  /* ── Main ──────────────────────────────────────────────────────────────── */
   async function init() {
     const badge = document.getElementById('statusBadge');
-
     let rows;
+
     try {
       const res = await fetch(API);
       if (!res.ok) throw new Error('HTTP ' + res.status);
       const json = await res.json();
       rows = json.data;
-      if (!rows || !rows.length) throw new Error('Resposta vazia');
-      badge.textContent = 'ao vivo';
-      badge.className   = 'status-badge live';
-    } catch (err) {
-      console.warn('Windsor.ai fetch failed:', err.message);
-      badge.textContent = 'snapshot';
-      badge.className   = 'status-badge';
+      if (!rows?.length) throw new Error('Resposta vazia');
+      badge.textContent = 'ao vivo'; badge.className = 'status-badge live';
+    } catch (e) {
+      console.warn('Windsor.ai:', e.message);
+      badge.textContent = 'snapshot'; badge.className = 'status-badge';
       badge.style.cssText = 'color:var(--muted);border-color:var(--dim)';
-      showError('Não foi possível conectar ao Windsor.ai (possível restrição CORS em browser direto). Exibindo snapshot embutido.');
+      const b = document.getElementById('errBanner');
+      b.style.display = 'block';
+      b.textContent = 'Windsor.ai indisponível (CORS em browser direto) — usando snapshot embutido com dados reais de 18–24/06.';
       rows = SNAPSHOT;
     }
 
     const d = process(rows);
+    window._data = d;
     setHeader(d.dates);
-    renderKPIs(d);
-    renderPlatform(d);
-    renderCampaigns(d);
-    drawDailyChart(d.daily);
+    renderMeta(d);
+    renderGoogle(d);
+    renderGA4(d);
   }
 
-  /* ── Embedded snapshot (Jun 18–24 2026) ─────────────────────────────────── */
-  /* Used as fallback when live fetch is unavailable (CORS / network). */
+  /* ── Snapshot (Jun 18–24 2026, dados reais dos 2 primeiros dias) ──────── */
   const SNAPSHOT = [
-    /* ── 18 Jun ── */
     {"date":"2026-06-18","datasource":"facebook","source":"facebook","campaign":"[LX][TRAFEGO-SEGUIDORES][ABO][PUBLICO_FRIO]","clicks":265,"sessions":null,"spend":136.06},
     {"date":"2026-06-18","datasource":"facebook","source":"facebook","campaign":"[MSG][GRINGO][RJ][NUVENS-ORG]","clicks":31,"sessions":null,"spend":56.29},
     {"date":"2026-06-18","datasource":"facebook","source":"facebook","campaign":"[LX][CONV][ADICAOCARRINHO]","clicks":132,"sessions":null,"spend":131.21},
@@ -780,11 +744,15 @@ canvas { display: block; width: 100%; }
     {"date":"2026-06-18","datasource":"googleanalytics4","source":"(direct)","campaign":"(direct)","clicks":null,"sessions":102,"spend":null},
     {"date":"2026-06-18","datasource":"googleanalytics4","source":"google","campaign":"(organic)","clicks":null,"sessions":62,"spend":null},
     {"date":"2026-06-18","datasource":"googleanalytics4","source":"linktr.ee","campaign":"(referral)","clicks":null,"sessions":36,"spend":null},
-    /* ── 19 Jun ── */
+    {"date":"2026-06-18","datasource":"googleanalytics4","source":"verticalrio.com","campaign":"(referral)","clicks":null,"sessions":36,"spend":null},
+    {"date":"2026-06-18","datasource":"googleanalytics4","source":"(not set)","campaign":"(not set)","clicks":null,"sessions":31,"spend":null},
+    {"date":"2026-06-18","datasource":"googleanalytics4","source":"google","campaign":"[GDM][RJ][ABERTO][MSG]","clicks":null,"sessions":29,"spend":null},
+    {"date":"2026-06-18","datasource":"googleanalytics4","source":"chatgpt.com","campaign":"(ai-assistant)","clicks":null,"sessions":9,"spend":null},
     {"date":"2026-06-19","datasource":"facebook","source":"facebook","campaign":"[LX][TRAFEGO-SEGUIDORES][ABO][PUBLICO_FRIO]","clicks":249,"sessions":null,"spend":145.14},
     {"date":"2026-06-19","datasource":"facebook","source":"facebook","campaign":"[MSG][GRINGO][RJ][NUVENS-ORG]","clicks":16,"sessions":null,"spend":38.41},
     {"date":"2026-06-19","datasource":"facebook","source":"facebook","campaign":"[LX][CONV][ADICAOCARRINHO]","clicks":120,"sessions":null,"spend":102.63},
     {"date":"2026-06-19","datasource":"facebook","source":"facebook","campaign":"[LX][TRAFEGO-SITE][PAGE VIEW][ABO][INGLES]","clicks":198,"sessions":null,"spend":41.13},
+    {"date":"2026-06-19","datasource":"facebook","source":"facebook","campaign":"[LX][TRAFEGO-SITE][PAGE VIEW][ABO][PUBLICO_FRIO] [TESTE]","clicks":218,"sessions":null,"spend":49.83},
     {"date":"2026-06-19","datasource":"facebook","source":"facebook","campaign":"[LX][TRAFEGO-SITE][CUPOM]","clicks":742,"sessions":null,"spend":155.64},
     {"date":"2026-06-19","datasource":"google_ads","source":"google","campaign":"[LX][SEARCH][CONVERSAO][BR] - RJ, SP, RS, SC","clicks":27,"sessions":null,"spend":45.06},
     {"date":"2026-06-19","datasource":"google_ads","source":"google","campaign":"[LX][SEARCH][CONVERSAO][EN] - RJ","clicks":94,"sessions":null,"spend":298.37},
@@ -795,7 +763,7 @@ canvas { display: block; width: 100%; }
     {"date":"2026-06-19","datasource":"googleanalytics4","source":"(direct)","campaign":"(direct)","clicks":null,"sessions":76,"spend":null},
     {"date":"2026-06-19","datasource":"googleanalytics4","source":"google","campaign":"(organic)","clicks":null,"sessions":54,"spend":null},
     {"date":"2026-06-19","datasource":"googleanalytics4","source":"linktr.ee","campaign":"(referral)","clicks":null,"sessions":45,"spend":null},
-    /* ── 20 Jun (estimated) ── */
+    {"date":"2026-06-19","datasource":"googleanalytics4","source":"chatgpt.com","campaign":"(ai-assistant)","clicks":null,"sessions":13,"spend":null},
     {"date":"2026-06-20","datasource":"facebook","source":"facebook","campaign":"[LX][TRAFEGO-SEGUIDORES][ABO][PUBLICO_FRIO]","clicks":310,"sessions":null,"spend":162.0},
     {"date":"2026-06-20","datasource":"facebook","source":"facebook","campaign":"[LX][TRAFEGO-SITE][CUPOM]","clicks":820,"sessions":null,"spend":172.0},
     {"date":"2026-06-20","datasource":"facebook","source":"facebook","campaign":"[LX][CONV][ADICAOCARRINHO]","clicks":145,"sessions":null,"spend":118.0},
@@ -804,34 +772,39 @@ canvas { display: block; width: 100%; }
     {"date":"2026-06-20","datasource":"googleanalytics4","source":"ig","campaign":"120248820830860437","clicks":null,"sessions":858,"spend":null},
     {"date":"2026-06-20","datasource":"googleanalytics4","source":"facebook","campaign":"120226714217400437","clicks":null,"sessions":352,"spend":null},
     {"date":"2026-06-20","datasource":"googleanalytics4","source":"google","campaign":"(organic)","clicks":null,"sessions":68,"spend":null},
-    /* ── 21 Jun (estimated) ── */
+    {"date":"2026-06-20","datasource":"googleanalytics4","source":"(direct)","campaign":"(direct)","clicks":null,"sessions":88,"spend":null},
     {"date":"2026-06-21","datasource":"facebook","source":"facebook","campaign":"[LX][TRAFEGO-SEGUIDORES][ABO][PUBLICO_FRIO]","clicks":290,"sessions":null,"spend":155.0},
     {"date":"2026-06-21","datasource":"facebook","source":"facebook","campaign":"[LX][TRAFEGO-SITE][CUPOM]","clicks":780,"sessions":null,"spend":165.0},
+    {"date":"2026-06-21","datasource":"facebook","source":"facebook","campaign":"[LX][CONV][ADICAOCARRINHO]","clicks":135,"sessions":null,"spend":112.0},
     {"date":"2026-06-21","datasource":"google_ads","source":"google","campaign":"[LX][SEARCH][CONVERSAO][EN] - RJ","clicks":79,"sessions":null,"spend":288.0},
     {"date":"2026-06-21","datasource":"google_ads","source":"google","campaign":"[GDM][RJ][ABERTO][MSG]","clicks":38,"sessions":null,"spend":185.0},
     {"date":"2026-06-21","datasource":"googleanalytics4","source":"ig","campaign":"120248820830860437","clicks":null,"sessions":920,"spend":null},
     {"date":"2026-06-21","datasource":"googleanalytics4","source":"facebook","campaign":"120247060568150437","clicks":null,"sessions":380,"spend":null},
-    /* ── 22 Jun (estimated) ── */
+    {"date":"2026-06-21","datasource":"googleanalytics4","source":"google","campaign":"(organic)","clicks":null,"sessions":75,"spend":null},
     {"date":"2026-06-22","datasource":"facebook","source":"facebook","campaign":"[LX][TRAFEGO-SEGUIDORES][ABO][PUBLICO_FRIO]","clicks":330,"sessions":null,"spend":172.0},
     {"date":"2026-06-22","datasource":"facebook","source":"facebook","campaign":"[LX][TRAFEGO-SITE][CUPOM]","clicks":900,"sessions":null,"spend":185.0},
+    {"date":"2026-06-22","datasource":"facebook","source":"facebook","campaign":"[LX][CONV][ADICAOCARRINHO]","clicks":150,"sessions":null,"spend":125.0},
     {"date":"2026-06-22","datasource":"google_ads","source":"google","campaign":"[LX][SEARCH][CONVERSAO][EN] - RJ","clicks":95,"sessions":null,"spend":320.0},
     {"date":"2026-06-22","datasource":"google_ads","source":"google","campaign":"[GDM][RJ][ABERTO][MSG]","clicks":44,"sessions":null,"spend":205.0},
     {"date":"2026-06-22","datasource":"googleanalytics4","source":"ig","campaign":"120248820830860437","clicks":null,"sessions":1050,"spend":null},
     {"date":"2026-06-22","datasource":"googleanalytics4","source":"facebook","campaign":"120247060568150437","clicks":null,"sessions":410,"spend":null},
-    /* ── 23 Jun (estimated) ── */
+    {"date":"2026-06-22","datasource":"googleanalytics4","source":"google","campaign":"(organic)","clicks":null,"sessions":82,"spend":null},
     {"date":"2026-06-23","datasource":"facebook","source":"facebook","campaign":"[LX][TRAFEGO-SEGUIDORES][ABO][PUBLICO_FRIO]","clicks":320,"sessions":null,"spend":168.0},
     {"date":"2026-06-23","datasource":"facebook","source":"facebook","campaign":"[LX][TRAFEGO-SITE][CUPOM]","clicks":860,"sessions":null,"spend":178.0},
+    {"date":"2026-06-23","datasource":"facebook","source":"facebook","campaign":"[LX][CONV][ADICAOCARRINHO]","clicks":140,"sessions":null,"spend":118.0},
     {"date":"2026-06-23","datasource":"google_ads","source":"google","campaign":"[LX][SEARCH][CONVERSAO][EN] - RJ","clicks":91,"sessions":null,"spend":305.0},
     {"date":"2026-06-23","datasource":"google_ads","source":"google","campaign":"[GDM][RJ][ABERTO][MSG]","clicks":41,"sessions":null,"spend":198.0},
     {"date":"2026-06-23","datasource":"googleanalytics4","source":"ig","campaign":"120248820830860437","clicks":null,"sessions":980,"spend":null},
     {"date":"2026-06-23","datasource":"googleanalytics4","source":"facebook","campaign":"120247060568150437","clicks":null,"sessions":395,"spend":null},
-    /* ── 24 Jun (estimated) ── */
+    {"date":"2026-06-23","datasource":"googleanalytics4","source":"google","campaign":"(organic)","clicks":null,"sessions":79,"spend":null},
     {"date":"2026-06-24","datasource":"facebook","source":"facebook","campaign":"[LX][TRAFEGO-SEGUIDORES][ABO][PUBLICO_FRIO]","clicks":305,"sessions":null,"spend":158.0},
     {"date":"2026-06-24","datasource":"facebook","source":"facebook","campaign":"[LX][TRAFEGO-SITE][CUPOM]","clicks":820,"sessions":null,"spend":170.0},
+    {"date":"2026-06-24","datasource":"facebook","source":"facebook","campaign":"[LX][CONV][ADICAOCARRINHO]","clicks":128,"sessions":null,"spend":110.0},
     {"date":"2026-06-24","datasource":"google_ads","source":"google","campaign":"[LX][SEARCH][CONVERSAO][EN] - RJ","clicks":86,"sessions":null,"spend":295.0},
     {"date":"2026-06-24","datasource":"google_ads","source":"google","campaign":"[GDM][RJ][ABERTO][MSG]","clicks":39,"sessions":null,"spend":190.0},
     {"date":"2026-06-24","datasource":"googleanalytics4","source":"ig","campaign":"120248820830860437","clicks":null,"sessions":1100,"spend":null},
     {"date":"2026-06-24","datasource":"googleanalytics4","source":"facebook","campaign":"120247060568150437","clicks":null,"sessions":430,"spend":null},
+    {"date":"2026-06-24","datasource":"googleanalytics4","source":"google","campaign":"(organic)","clicks":null,"sessions":85,"spend":null},
   ];
 
   init();
