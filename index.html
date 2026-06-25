@@ -65,14 +65,194 @@ header::after {
 }
 .brand-name { font-size: 12px; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; }
 .brand-sub  { font-size: 9px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--muted); margin-top: 1px; }
-.header-meta { display: flex; align-items: center; gap: 12px; }
-.date-range  { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+.header-meta { display: flex; align-items: center; gap: 10px; position: relative; }
+
+/* ── Date range picker button ────────────────────────────────────────────── */
+.daterange-btn {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 12px 5px;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+  font-size: 11px;
+  font-family: inherit;
+  letter-spacing: 0.06em;
+  transition: border-color 0.15s, background 0.15s;
+}
+.daterange-btn:hover { border-color: var(--muted); background: var(--panel); }
+.daterange-btn.open  { border-color: var(--accent); }
+.daterange-btn svg   { flex-shrink: 0; opacity: 0.55; }
+.daterange-btn .arrow {
+  font-size: 8px; color: var(--muted); transition: transform 0.15s;
+}
+.daterange-btn.open .arrow { transform: rotate(180deg); }
+
 .status-badge {
   font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase;
   padding: 3px 8px 2px; border-radius: 2px; border: 1px solid var(--dim); color: var(--muted);
 }
 .status-badge.live   { color: var(--pos); border-color: rgba(31,217,138,.35); background: rgba(31,217,138,.07); }
 .status-badge.loading{ animation: breathe 1.4s ease-in-out infinite; }
+
+/* ── Calendar picker dropdown ────────────────────────────────────────────── */
+#calPicker {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 999;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  box-shadow: 0 12px 40px rgba(0,0,0,.55);
+  display: none;
+  width: 580px;
+  max-width: calc(100vw - 20px);
+  animation: dropIn .18s cubic-bezier(.16,1,.3,1) both;
+}
+#calPicker.open { display: flex; flex-direction: column; }
+@keyframes dropIn { from { opacity:0; transform: translateY(-6px); } to { opacity:1; transform:none; } }
+
+.cal-top {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+}
+
+/* Presets column */
+.cal-presets {
+  width: 140px;
+  flex-shrink: 0;
+  padding: 12px 10px;
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column; gap: 4px;
+}
+.cal-presets-label {
+  font-size: 8px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--muted); padding: 2px 6px 6px;
+}
+.preset-btn {
+  padding: 6px 10px 5px;
+  font-size: 11px; font-family: inherit;
+  text-align: left;
+  background: none; border: none; border-radius: 3px;
+  color: var(--muted); cursor: pointer;
+  transition: background .12s, color .12s;
+}
+.preset-btn:hover         { background: var(--surface); color: var(--text); }
+.preset-btn.active        { background: rgba(0,200,176,.12); color: var(--accent); }
+
+/* Calendar area */
+.cal-months {
+  flex: 1;
+  display: flex;
+  padding: 14px;
+  gap: 16px;
+}
+.cal-month { flex: 1; min-width: 0; }
+.cal-month-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 10px;
+}
+.cal-nav {
+  width: 22px; height: 22px;
+  background: none; border: 1px solid var(--border); border-radius: 2px;
+  color: var(--muted); cursor: pointer; font-size: 11px;
+  display: flex; align-items: center; justify-content: center;
+  transition: border-color .12s, color .12s;
+}
+.cal-nav:hover { border-color: var(--muted); color: var(--text); }
+.cal-nav:disabled { opacity: 0.25; cursor: default; }
+.cal-month-title {
+  font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--text); font-weight: 500;
+}
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+.cal-dow {
+  font-size: 8px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--muted); text-align: center; padding: 2px 0 5px;
+}
+.cal-day {
+  aspect-ratio: 1;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-variant-numeric: tabular-nums;
+  color: var(--text);
+  border-radius: 2px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-family: inherit;
+  transition: background .1s, color .1s;
+  position: relative;
+}
+.cal-day:hover:not(:disabled):not(.cal-day-empty) {
+  background: var(--surface);
+}
+.cal-day.in-range {
+  background: rgba(0,200,176,.1);
+  border-radius: 0;
+}
+.cal-day.range-start, .cal-day.range-end {
+  background: var(--accent) !important;
+  color: #07101F !important;
+  font-weight: 600;
+  border-radius: 2px;
+}
+.cal-day.range-start.in-range { border-radius: 2px 0 0 2px; }
+.cal-day.range-end.in-range   { border-radius: 0 2px 2px 0; }
+.cal-day.range-start.range-end { border-radius: 2px; }
+.cal-day.today::after {
+  content: '';
+  position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%);
+  width: 3px; height: 3px; border-radius: 50%;
+  background: var(--accent);
+}
+.cal-day.range-start.today::after,
+.cal-day.range-end.today::after { background: #07101F; }
+.cal-day:disabled, .cal-day.cal-day-empty {
+  color: var(--muted); opacity: 0.3; cursor: default; pointer-events: none;
+}
+.cal-day.out-of-range {
+  opacity: 0.2; cursor: not-allowed; pointer-events: none;
+}
+
+/* Footer */
+.cal-footer {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 14px 12px;
+  border-top: 1px solid var(--border);
+  gap: 10px;
+}
+.cal-selection-text {
+  font-size: 10px; color: var(--muted); flex: 1;
+}
+.cal-selection-text span { color: var(--text); }
+.cal-hint {
+  font-size: 9px; color: var(--muted); letter-spacing: 0.08em;
+}
+.cal-apply {
+  padding: 6px 18px 5px;
+  background: var(--accent); color: #07101F;
+  border: none; border-radius: 2px;
+  font-size: 11px; font-weight: 600; font-family: inherit;
+  cursor: pointer; letter-spacing: 0.08em;
+  transition: opacity .12s;
+}
+.cal-apply:hover   { opacity: .88; }
+.cal-apply:disabled{ opacity: .3; cursor: default; }
+.cal-cancel {
+  padding: 6px 12px 5px;
+  background: none; color: var(--muted);
+  border: 1px solid var(--border); border-radius: 2px;
+  font-size: 11px; font-family: inherit;
+  cursor: pointer;
+  transition: color .12s, border-color .12s;
+}
+.cal-cancel:hover { color: var(--text); border-color: var(--muted); }
 
 /* ── Tab nav ─────────────────────────────────────────────────────────────── */
 .tab-nav {
@@ -83,26 +263,17 @@ header::after {
 }
 .tab-btn {
   padding: 12px 20px 11px;
-  font-size: 10px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--muted);
-  background: none;
-  border: none;
+  font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--muted); background: none; border: none;
   border-bottom: 2px solid transparent;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  transition: color 0.15s;
-  margin-bottom: -1px;
+  cursor: pointer; display: flex; align-items: center; gap: 7px;
+  transition: color 0.15s; margin-bottom: -1px;
 }
 .tab-btn:hover { color: var(--text); }
 .tab-btn.active { color: var(--text); border-bottom-color: var(--tab-color, var(--accent)); }
 .tab-btn .dot {
   width: 6px; height: 6px; border-radius: 50%;
-  background: var(--tab-color, var(--accent));
-  opacity: 0.7;
+  background: var(--tab-color, var(--accent)); opacity: 0.7;
 }
 .tab-btn.active .dot { opacity: 1; }
 
@@ -112,29 +283,20 @@ header::after {
 
 /* ── KPI row ─────────────────────────────────────────────────────────────── */
 .kpi-row {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  display: grid; grid-template-columns: repeat(4, 1fr);
   border-bottom: 1px solid var(--border);
 }
 .kpi-row > * + * { border-left: 1px solid var(--border); }
-.kpi {
-  background: var(--panel);
-  padding: 20px 22px 16px;
-  position: relative; overflow: hidden;
-}
+.kpi { background: var(--panel); padding: 20px 22px 16px; position: relative; overflow: hidden; }
 .kpi::before {
   content: ''; position: absolute; top: 0; left: 0;
-  width: 2px; height: 100%;
-  background: var(--kpi-color, var(--accent));
+  width: 2px; height: 100%; background: var(--kpi-color, var(--accent));
 }
 .kpi-eyebrow { font-size: 9px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
-.kpi-value {
-  font-size: 28px; font-weight: 300; font-variant-numeric: tabular-nums;
-  letter-spacing: -0.02em; color: var(--text); line-height: 1;
-}
+.kpi-value   { font-size: 28px; font-weight: 300; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; color: var(--text); line-height: 1; }
 .kpi-value b { font-weight: 600; }
-.kpi-unit { font-size: 12px; font-weight: 300; color: var(--muted); margin-right: 1px; }
-.kpi-sub  { margin-top: 6px; font-size: 10px; color: var(--muted); }
+.kpi-unit    { font-size: 12px; font-weight: 300; color: var(--muted); margin-right: 1px; }
+.kpi-sub     { margin-top: 6px; font-size: 10px; color: var(--muted); }
 
 /* ── Body ────────────────────────────────────────────────────────────────── */
 .body { padding: 20px 28px 28px; display: flex; flex-direction: column; gap: 16px; }
@@ -161,26 +323,43 @@ header::after {
 /* ── Camp rows ───────────────────────────────────────────────────────────── */
 .camp-rows { display: flex; flex-direction: column; gap: 9px; }
 .camp-header { display: grid; grid-template-columns: 1fr 80px 68px; align-items: center; gap: 8px; margin-bottom: 3px; }
-.camp-name  { font-size: 11px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 6px; }
-.camp-dot   { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
-.camp-spend { font-size: 11px; color: var(--text); font-variant-numeric: tabular-nums; text-align: right; }
-.camp-clicks{ font-size: 10px; color: var(--muted); text-align: right; }
-.camp-track { height: 2px; background: var(--surface); border-radius: 1px; overflow: hidden; }
-.camp-fill  { height: 100%; border-radius: 1px; opacity: 0.65; }
+.camp-name   { font-size: 11px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 6px; }
+.camp-dot    { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+.camp-spend  { font-size: 11px; color: var(--text); font-variant-numeric: tabular-nums; text-align: right; }
+.camp-clicks { font-size: 10px; color: var(--muted); text-align: right; }
+.camp-track  { height: 2px; background: var(--surface); border-radius: 1px; overflow: hidden; }
+.camp-fill   { height: 100%; border-radius: 1px; opacity: 0.65; }
 
 /* ── Sessions table ──────────────────────────────────────────────────────── */
 .src-table { width: 100%; border-collapse: collapse; }
 .src-table th {
   font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase;
-  color: var(--muted); font-weight: 400; padding: 0 8px 10px 0; text-align: left; border-bottom: 1px solid var(--border);
+  color: var(--muted); font-weight: 400; padding: 0 8px 10px 0;
+  text-align: left; border-bottom: 1px solid var(--border);
 }
 .src-table th:last-child, .src-table td:last-child { text-align: right; padding-right: 0; }
 .src-table td { padding: 8px 8px 0 0; font-size: 11px; color: var(--text); font-variant-numeric: tabular-nums; vertical-align: middle; }
 .src-table td.dim { color: var(--muted); font-size: 10px; }
-.src-table .mini-bar { height: 3px; background: var(--surface); border-radius: 2px; overflow: hidden; margin-top: 4px; }
-.src-table .mini-fill{ height: 100%; border-radius: 2px; }
 
-/* ── Error / states ──────────────────────────────────────────────────────── */
+/* ── Loading overlay ─────────────────────────────────────────────────────── */
+.loading-overlay {
+  position: fixed; inset: 0; z-index: 500;
+  background: rgba(7,16,31,.7);
+  display: flex; align-items: center; justify-content: center;
+  backdrop-filter: blur(2px);
+  pointer-events: none; opacity: 0; transition: opacity .2s;
+}
+.loading-overlay.show { opacity: 1; pointer-events: all; }
+.loading-spinner {
+  width: 32px; height: 32px;
+  border: 2px solid var(--dim);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin .7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Error banner ────────────────────────────────────────────────────────── */
 .error-banner {
   background: rgba(255,90,114,.08); border: 1px solid rgba(255,90,114,.25);
   border-radius: 3px; padding: 8px 14px; font-size: 11px; color: var(--neg);
@@ -191,11 +370,16 @@ header::after {
 .fade-in { animation: fadeUp .4s cubic-bezier(.16,1,.3,1) both; }
 @keyframes fadeUp   { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
 @keyframes breathe  { 0%,100% { opacity:1; } 50% { opacity:.35; } }
-@media (prefers-reduced-motion: reduce) { .fade-in, .status-badge { animation: none !important; } }
+@media (prefers-reduced-motion: reduce) { .fade-in, .status-badge, .loading-spinner { animation: none !important; } }
 canvas { display: block; width: 100%; }
 </style>
 </head>
 <body>
+
+<!-- ── Loading overlay ─────────────────────────────────────────────────── -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-spinner"></div>
+</div>
 
 <!-- ── Header ──────────────────────────────────────────────────────────── -->
 <header>
@@ -207,8 +391,41 @@ canvas { display: block; width: 100%; }
     </div>
   </div>
   <div class="header-meta">
-    <span class="date-range" id="dateRange">—</span>
     <span class="status-badge loading" id="statusBadge">aguardando</span>
+
+    <!-- Date range button -->
+    <button class="daterange-btn" id="daterangeBtn" aria-haspopup="true" aria-expanded="false">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+        <rect x="1" y="2" width="10" height="9" rx="1" stroke="currentColor" stroke-width="1.1"/>
+        <path d="M1 5h10" stroke="currentColor" stroke-width="1.1"/>
+        <path d="M4 1v2M8 1v2" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/>
+      </svg>
+      <span id="daterangeLabel">Últimos 7 dias</span>
+      <span class="arrow">▾</span>
+    </button>
+
+    <!-- Calendar picker dropdown -->
+    <div id="calPicker" role="dialog" aria-label="Selecionar período">
+      <div class="cal-top">
+        <!-- Presets -->
+        <div class="cal-presets">
+          <div class="cal-presets-label">Rápido</div>
+          <button class="preset-btn active" data-days="7">Últimos 7 dias</button>
+          <button class="preset-btn" data-days="14">Últimos 14 dias</button>
+          <button class="preset-btn" data-days="30">Últimos 30 dias</button>
+          <button class="preset-btn" data-days="60">Últimos 60 dias</button>
+          <button class="preset-btn" data-days="90">Últimos 90 dias</button>
+        </div>
+        <!-- Two months -->
+        <div class="cal-months" id="calMonths"></div>
+      </div>
+      <div class="cal-footer">
+        <div class="cal-selection-text" id="calSelText">Selecione a data inicial</div>
+        <span class="cal-hint">Máx. 90 dias</span>
+        <button class="cal-cancel" id="calCancel">Cancelar</button>
+        <button class="cal-apply" id="calApply" disabled>Aplicar</button>
+      </div>
+    </div>
   </div>
 </header>
 
@@ -217,10 +434,10 @@ canvas { display: block; width: 100%; }
   <button class="tab-btn active" data-tab="meta"   style="--tab-color:var(--meta)">
     <span class="dot"></span>Meta Ads
   </button>
-  <button class="tab-btn"        data-tab="google" style="--tab-color:var(--google)">
+  <button class="tab-btn" data-tab="google" style="--tab-color:var(--google)">
     <span class="dot"></span>Google Ads
   </button>
-  <button class="tab-btn"        data-tab="ga4"    style="--tab-color:var(--ga4)">
+  <button class="tab-btn" data-tab="ga4"    style="--tab-color:var(--ga4)">
     <span class="dot"></span>Analytics
   </button>
 </nav>
@@ -233,12 +450,12 @@ canvas { display: block; width: 100%; }
     <div class="kpi topo" style="--kpi-color:var(--meta)">
       <div class="kpi-eyebrow">Investimento Meta</div>
       <div class="kpi-value" id="m-spend"><span class="kpi-unit">R$</span> <b>—</b></div>
-      <div class="kpi-sub" id="m-spend-sub">últimos 7 dias</div>
+      <div class="kpi-sub" id="m-spend-sub">carregando…</div>
     </div>
     <div class="kpi topo" style="--kpi-color:var(--meta)">
       <div class="kpi-eyebrow">Cliques</div>
       <div class="kpi-value" id="m-clicks"><b>—</b></div>
-      <div class="kpi-sub" id="m-clicks-sub">total pago</div>
+      <div class="kpi-sub">total pago</div>
     </div>
     <div class="kpi topo" style="--kpi-color:var(--meta)">
       <div class="kpi-eyebrow">CPC Médio</div>
@@ -251,15 +468,12 @@ canvas { display: block; width: 100%; }
       <div class="kpi-sub">com gasto no período</div>
     </div>
   </div>
-
   <div class="body">
     <div id="errBanner" class="error-banner"></div>
-
     <div class="card topo fade-in" style="animation-delay:.04s">
       <div class="card-label">Investimento Diário — Meta Ads</div>
       <canvas id="chartMeta" height="150"></canvas>
     </div>
-
     <div class="two-col">
       <div class="card topo fade-in" style="animation-delay:.08s">
         <div class="card-label">Cliques por Campanha</div>
@@ -281,7 +495,7 @@ canvas { display: block; width: 100%; }
     <div class="kpi topo" style="--kpi-color:var(--google)">
       <div class="kpi-eyebrow">Investimento Google</div>
       <div class="kpi-value" id="g-spend"><span class="kpi-unit">R$</span> <b>—</b></div>
-      <div class="kpi-sub">últimos 7 dias</div>
+      <div class="kpi-sub">período selecionado</div>
     </div>
     <div class="kpi topo" style="--kpi-color:var(--google)">
       <div class="kpi-eyebrow">Cliques</div>
@@ -299,13 +513,11 @@ canvas { display: block; width: 100%; }
       <div class="kpi-sub">com gasto no período</div>
     </div>
   </div>
-
   <div class="body">
     <div class="card topo fade-in" style="animation-delay:.04s">
       <div class="card-label">Investimento Diário — Google Ads</div>
       <canvas id="chartGoogle" height="150"></canvas>
     </div>
-
     <div class="two-col">
       <div class="card topo fade-in" style="animation-delay:.08s">
         <div class="card-label">Cliques por Campanha</div>
@@ -327,7 +539,7 @@ canvas { display: block; width: 100%; }
     <div class="kpi topo" style="--kpi-color:var(--ga4)">
       <div class="kpi-eyebrow">Sessões Totais</div>
       <div class="kpi-value" id="a-sessions"><b>—</b></div>
-      <div class="kpi-sub">todas as fontes · 7d</div>
+      <div class="kpi-sub">todas as fontes</div>
     </div>
     <div class="kpi topo" style="--kpi-color:var(--ga4)">
       <div class="kpi-eyebrow">Sessões / Dia</div>
@@ -345,13 +557,11 @@ canvas { display: block; width: 100%; }
       <div class="kpi-sub">fontes distintas</div>
     </div>
   </div>
-
   <div class="body">
     <div class="card topo fade-in" style="animation-delay:.04s">
       <div class="card-label">Sessões por Dia — GA4</div>
       <canvas id="chartGA4" height="150"></canvas>
     </div>
-
     <div class="two-col">
       <div class="card topo fade-in" style="animation-delay:.08s">
         <div class="card-label">Sessões por Canal</div>
@@ -361,9 +571,7 @@ canvas { display: block; width: 100%; }
         <div class="card-label">Top Campanhas / Origens — Sessões</div>
         <div style="overflow-x:auto">
           <table class="src-table" id="ga4CampTable">
-            <thead><tr>
-              <th>Campanha</th><th>Fonte</th><th>Sessões</th>
-            </tr></thead>
+            <thead><tr><th>Campanha</th><th>Fonte</th><th>Sessões</th></tr></thead>
             <tbody></tbody>
           </table>
         </div>
@@ -377,10 +585,10 @@ canvas { display: block; width: 100%; }
 (function () {
   'use strict';
 
-  const API = 'https://connectors.windsor.ai/all'
-    + '?api_key=2a3b6cc17507c2540c6b98c651a31cd95d6b'
-    + '&date_preset=last_7d'
-    + '&fields=date,datasource,account_name,source,campaign,clicks,sessions,spend';
+  const API_KEY    = '2a3b6cc17507c2540c6b98c651a31cd95d6b';
+  const API_BASE   = 'https://connectors.windsor.ai/all';
+  const API_FIELDS = 'date,datasource,account_name,source,campaign,clicks,sessions,spend';
+  const MAX_DAYS   = 90;
 
   const C = {
     border:'#162436', muted:'#3D5878', text:'#C4D4EC', surface:'#0F1F33',
@@ -389,53 +597,297 @@ canvas { display: block; width: 100%; }
 
   const f = {
     brl:  n => 'R$ ' + Math.round(n).toLocaleString('pt-BR'),
-    brl2: n => n.toLocaleString('pt-BR', {minimumFractionDigits:2,maximumFractionDigits:2}),
+    brl2: n => n.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2}),
     num:  n => Math.round(n).toLocaleString('pt-BR'),
     pct:  n => n.toFixed(1) + '%',
     dd:   s => { const [,m,d] = s.split('-'); return `${d}/${m}`; },
+    iso:  d => d.toISOString().slice(0,10),
+    display: s => { const [,m,d] = s.split('-'); const M=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez']; return `${d} ${M[+m-1]}`; },
   };
 
-  /* ── Tab switching ─────────────────────────────────────────────────────── */
+  /* ────────────────────────────────────────────────────────────────────────
+     CALENDAR PICKER
+  ──────────────────────────────────────────────────────────────────────── */
+  const calState = {
+    viewLeft:  new Date(),   // first calendar month displayed
+    startDate: null,         // selected start ISO string
+    endDate:   null,         // selected end ISO string
+    hovering:  null,         // date being hovered
+    picking:   'start',      // 'start' | 'end'
+  };
+
+  // today string
+  function todayISO() {
+    const n = new Date();
+    return f.iso(n);
+  }
+
+  function addDays(iso, n) {
+    const d = new Date(iso + 'T12:00:00');
+    d.setDate(d.getDate() + n);
+    return f.iso(d);
+  }
+
+  function diffDays(a, b) {
+    return Math.round((new Date(b+'T12:00:00') - new Date(a+'T12:00:00')) / 86400000);
+  }
+
+  function isoToMonthKey(iso) {
+    return iso.slice(0,7); // 'YYYY-MM'
+  }
+
+  function monthName(y, m) {
+    const M = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho',
+               'Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+    return M[m] + ' ' + y;
+  }
+
+  function renderCalendar() {
+    const today = todayISO();
+    const container = document.getElementById('calMonths');
+
+    // Two months: left = calState.viewLeft, right = +1
+    const months = [];
+    const lDate = new Date(calState.viewLeft.getFullYear(), calState.viewLeft.getMonth(), 1);
+    for (let i = 0; i < 2; i++) {
+      months.push(new Date(lDate.getFullYear(), lDate.getMonth() + i, 1));
+    }
+
+    // Min allowed date (today - MAX_DAYS)
+    const minDate = addDays(today, -MAX_DAYS);
+
+    container.innerHTML = months.map((mDate, idx) => {
+      const y = mDate.getFullYear();
+      const m = mDate.getMonth();
+      const daysInMonth = new Date(y, m+1, 0).getDate();
+      const firstDow    = new Date(y, m, 1).getDay(); // 0=Sun
+
+      const canPrev = idx === 0;
+      const canNext = idx === 1;
+
+      let cells = '';
+      // Empty leading cells
+      for (let i = 0; i < firstDow; i++) {
+        cells += `<span class="cal-day cal-day-empty"></span>`;
+      }
+      for (let d = 1; d <= daysInMonth; d++) {
+        const iso = `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+        const isToday    = iso === today;
+        const isTooOld   = iso < minDate;
+        const isFuture   = iso > today;
+        const isStart    = iso === calState.startDate;
+        const isEnd      = iso === calState.endDate;
+        const hoverEnd   = calState.picking === 'end' && calState.hovering;
+        const rangeEnd   = calState.endDate || hoverEnd;
+        const inRange    = calState.startDate && rangeEnd &&
+                           iso > (calState.startDate < rangeEnd ? calState.startDate : rangeEnd) &&
+                           iso < (calState.startDate < rangeEnd ? rangeEnd : calState.startDate);
+
+        // Would exceed MAX_DAYS from start
+        let wouldExceed = false;
+        if (calState.picking === 'end' && calState.startDate) {
+          const d1 = diffDays(calState.startDate, iso);
+          const d2 = diffDays(iso, calState.startDate);
+          if (d1 > MAX_DAYS || d2 > MAX_DAYS) wouldExceed = true;
+        }
+
+        const cls = [
+          'cal-day',
+          isToday   ? 'today'       : '',
+          isStart   ? 'range-start' : '',
+          isEnd     ? 'range-end'   : '',
+          inRange   ? 'in-range'    : '',
+          (isTooOld || isFuture || wouldExceed) ? 'out-of-range' : '',
+        ].filter(Boolean).join(' ');
+
+        cells += `<button class="${cls}" data-iso="${iso}" ${(isTooOld||isFuture||wouldExceed)?'disabled':''}>${d}</button>`;
+      }
+
+      return `<div class="cal-month">
+        <div class="cal-month-header">
+          ${canPrev ? `<button class="cal-nav" id="calPrev" title="Mês anterior">‹</button>` : '<span></span>'}
+          <span class="cal-month-title">${monthName(y, m)}</span>
+          ${canNext ? `<button class="cal-nav" id="calNext" title="Próximo mês">›</button>` : '<span></span>'}
+        </div>
+        <div class="cal-grid">
+          <span class="cal-dow">Dom</span><span class="cal-dow">Seg</span><span class="cal-dow">Ter</span>
+          <span class="cal-dow">Qua</span><span class="cal-dow">Qui</span><span class="cal-dow">Sex</span>
+          <span class="cal-dow">Sáb</span>
+          ${cells}
+        </div>
+      </div>`;
+    }).join('');
+
+    // Nav buttons
+    const prevBtn = document.getElementById('calPrev');
+    const nextBtn = document.getElementById('calNext');
+    if (prevBtn) {
+      const minMonth = new Date(); minMonth.setMonth(minMonth.getMonth() - 3);
+      prevBtn.disabled = lDate <= new Date(minMonth.getFullYear(), minMonth.getMonth(), 1);
+      prevBtn.addEventListener('click', () => {
+        calState.viewLeft = new Date(lDate.getFullYear(), lDate.getMonth() - 1, 1);
+        renderCalendar();
+      });
+    }
+    if (nextBtn) {
+      const today2 = new Date();
+      nextBtn.disabled = new Date(lDate.getFullYear(), lDate.getMonth() + 1, 1) > today2;
+      nextBtn.addEventListener('click', () => {
+        calState.viewLeft = new Date(lDate.getFullYear(), lDate.getMonth() + 1, 1);
+        renderCalendar();
+      });
+    }
+
+    // Day click handlers
+    container.querySelectorAll('.cal-day:not(:disabled):not(.cal-day-empty)').forEach(btn => {
+      btn.addEventListener('click', () => onDayClick(btn.dataset.iso));
+      btn.addEventListener('mouseenter', () => {
+        if (calState.picking === 'end') {
+          calState.hovering = btn.dataset.iso;
+          renderCalendar();
+        }
+      });
+    });
+
+    updateSelectionText();
+  }
+
+  function onDayClick(iso) {
+    if (calState.picking === 'start') {
+      calState.startDate = iso;
+      calState.endDate   = null;
+      calState.picking   = 'end';
+      calState.hovering  = null;
+      document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+    } else {
+      // Ensure start < end
+      let s = calState.startDate, e = iso;
+      if (s > e) { [s, e] = [e, s]; }
+      if (diffDays(s, e) > MAX_DAYS) return; // silently block
+      calState.startDate = s;
+      calState.endDate   = e;
+      calState.picking   = 'start';
+      calState.hovering  = null;
+      document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+    }
+    renderCalendar();
+    document.getElementById('calApply').disabled = !(calState.startDate && calState.endDate);
+  }
+
+  function updateSelectionText() {
+    const el = document.getElementById('calSelText');
+    if (!calState.startDate) {
+      el.innerHTML = 'Selecione a <span>data inicial</span>';
+    } else if (!calState.endDate) {
+      el.innerHTML = `Início: <span>${f.display(calState.startDate)}</span> — selecione o <span>fim</span>`;
+    } else {
+      const days = diffDays(calState.startDate, calState.endDate) + 1;
+      el.innerHTML = `<span>${f.display(calState.startDate)}</span> até <span>${f.display(calState.endDate)}</span> · ${days} dias`;
+    }
+  }
+
+  // Preset click
+  document.querySelectorAll('.preset-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const days = +btn.dataset.days;
+      const today = todayISO();
+      calState.startDate = addDays(today, -(days - 1));
+      calState.endDate   = today;
+      calState.picking   = 'start';
+      calState.hovering  = null;
+      document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('calApply').disabled = false;
+      renderCalendar();
+    });
+  });
+
+  // Open / close picker
+  const dateBtn = document.getElementById('daterangeBtn');
+  const picker  = document.getElementById('calPicker');
+
+  function openPicker() {
+    calState.viewLeft = (() => {
+      const today = new Date();
+      return new Date(today.getFullYear(), today.getMonth() - 1, 1);
+    })();
+    renderCalendar();
+    picker.classList.add('open');
+    dateBtn.classList.add('open');
+    dateBtn.setAttribute('aria-expanded', 'true');
+  }
+
+  function closePicker() {
+    picker.classList.remove('open');
+    dateBtn.classList.remove('open');
+    dateBtn.setAttribute('aria-expanded', 'false');
+  }
+
+  dateBtn.addEventListener('click', e => {
+    e.stopPropagation();
+    picker.classList.contains('open') ? closePicker() : openPicker();
+  });
+
+  document.addEventListener('click', e => {
+    if (!picker.contains(e.target) && e.target !== dateBtn) closePicker();
+  });
+
+  document.getElementById('calCancel').addEventListener('click', closePicker);
+
+  document.getElementById('calApply').addEventListener('click', () => {
+    if (!calState.startDate || !calState.endDate) return;
+    const days = diffDays(calState.startDate, calState.endDate) + 1;
+    // Update button label
+    const label = document.getElementById('daterangeLabel');
+    if (days === 7)  label.textContent = 'Últimos 7 dias';
+    else if (days === 14) label.textContent = 'Últimos 14 dias';
+    else if (days === 30) label.textContent = 'Últimos 30 dias';
+    else if (days === 60) label.textContent = 'Últimos 60 dias';
+    else if (days === 90) label.textContent = 'Últimos 90 dias';
+    else label.textContent = `${f.display(calState.startDate)} – ${f.display(calState.endDate)}`;
+    closePicker();
+    loadData(calState.startDate, calState.endDate);
+  });
+
+  /* ────────────────────────────────────────────────────────────────────────
+     TAB SWITCHING
+  ──────────────────────────────────────────────────────────────────────── */
   document.querySelectorAll('.tab-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
       document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
       btn.classList.add('active');
       document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
-      if (window._charts) redrawActive();
+      if (window._data) redrawActive();
     });
   });
 
-  /* ── Process ───────────────────────────────────────────────────────────── */
+  /* ────────────────────────────────────────────────────────────────────────
+     DATA PROCESSING
+  ──────────────────────────────────────────────────────────────────────── */
   function process(rows) {
-    const meta   = rows.filter(r => r.datasource === 'facebook'        && r.spend > 0);
-    const google = rows.filter(r => r.datasource === 'google_ads'      && r.spend > 0);
+    const meta   = rows.filter(r => r.datasource === 'facebook'         && r.spend > 0);
+    const google = rows.filter(r => r.datasource === 'google_ads'       && r.spend > 0);
     const ga4    = rows.filter(r => r.datasource === 'googleanalytics4');
 
     const dates = [...new Set(rows.map(r => r.date).filter(Boolean))].sort();
     const sum   = (arr, k) => arr.reduce((s,r) => s + (r[k]||0), 0);
 
-    /* Meta daily */
     const metaDaily = dates.map(d => ({
-      date: d,
-      spend: meta.filter(r => r.date===d).reduce((s,r)=>s+r.spend,0),
-      clicks:meta.filter(r => r.date===d).reduce((s,r)=>s+(r.clicks||0),0),
+      date:  d,
+      spend: meta.filter(r=>r.date===d).reduce((s,r)=>s+r.spend,0),
+      clicks:meta.filter(r=>r.date===d).reduce((s,r)=>s+(r.clicks||0),0),
     }));
-
-    /* Google daily */
     const googleDaily = dates.map(d => ({
       date:  d,
       spend: google.filter(r=>r.date===d).reduce((s,r)=>s+r.spend,0),
       clicks:google.filter(r=>r.date===d).reduce((s,r)=>s+(r.clicks||0),0),
     }));
-
-    /* GA4 daily */
     const ga4Daily = dates.map(d => ({
       date:     d,
       sessions: ga4.filter(r=>r.date===d).reduce((s,r)=>s+(r.sessions||0),0),
     }));
 
-    /* Campaign aggregations */
     function campAgg(arr) {
       const m = {};
       arr.forEach(r => {
@@ -447,7 +899,6 @@ canvas { display: block; width: 100%; }
       return Object.entries(m).map(([n,d])=>({name:n,...d})).sort((a,b)=>b.spend-a.spend);
     }
 
-    /* GA4 source aggregation */
     const srcMap = {};
     ga4.forEach(r => {
       let k = (r.source||'(other)').replace(/^\(/,'').replace(/\)$/,'').split('.')[0].split('/')[0];
@@ -456,7 +907,6 @@ canvas { display: block; width: 100%; }
     });
     const ga4Sources = Object.entries(srcMap).sort((a,b)=>b[1]-a[1]);
 
-    /* GA4 top campaign+source */
     const campSrcMap = {};
     ga4.forEach(r => {
       const key = (r.campaign||'—') + '|' + (r.source||'—');
@@ -467,13 +917,15 @@ canvas { display: block; width: 100%; }
 
     return {
       dates,
-      meta:   { rows: meta,   daily: metaDaily,   camps: campAgg(meta),   total: sum(meta,'spend'),   clicks: sum(meta,'clicks')   },
-      google: { rows: google, daily: googleDaily, camps: campAgg(google), total: sum(google,'spend'), clicks: sum(google,'clicks') },
-      ga4:    { rows: ga4,    daily: ga4Daily,    sources: ga4Sources,    camps: ga4Camps,            total: sum(ga4,'sessions')   },
+      meta:   { rows:meta,   daily:metaDaily,   camps:campAgg(meta),   total:sum(meta,'spend'),   clicks:sum(meta,'clicks')   },
+      google: { rows:google, daily:googleDaily, camps:campAgg(google), total:sum(google,'spend'), clicks:sum(google,'clicks') },
+      ga4:    { rows:ga4,    daily:ga4Daily,    sources:ga4Sources,    camps:ga4Camps,            total:sum(ga4,'sessions')   },
     };
   }
 
-  /* ── Generic canvas bar+line chart ────────────────────────────────────── */
+  /* ────────────────────────────────────────────────────────────────────────
+     CANVAS CHART
+  ──────────────────────────────────────────────────────────────────────── */
   function drawBarChart(canvasId, labels, barVals, lineVals, barColor, lineColor, barLabel, lineLabel) {
     const canvas = document.getElementById(canvasId);
     if (!canvas) return;
@@ -498,7 +950,6 @@ canvas { display: block; width: 100%; }
     const yBar    = v => PAD.t + cH - (v / maxBar) * cH;
     const yLine   = v => PAD.t + cH - (v / maxLine) * cH;
 
-    /* Grid */
     ctx.strokeStyle = C.border; ctx.lineWidth = 0.5; ctx.setLineDash([3,4]);
     for (let i=0; i<=3; i++) {
       const y = PAD.t + (cH/3)*i;
@@ -506,14 +957,12 @@ canvas { display: block; width: 100%; }
     }
     ctx.setLineDash([]);
 
-    /* Bars */
     barVals.forEach((v,i) => {
       const bH = (v/maxBar)*cH;
       ctx.fillStyle = barColor + 'AA';
       ctx.fillRect(xOf(i)-barW/2, PAD.t+cH-bH, barW, bH);
     });
 
-    /* Area + line */
     if (lineVals) {
       ctx.beginPath();
       lineVals.forEach((v,i) => { const x=xOf(i),y=yLine(v); i===0?ctx.moveTo(x,y):ctx.lineTo(x,y); });
@@ -521,7 +970,6 @@ canvas { display: block; width: 100%; }
       const g = ctx.createLinearGradient(0,PAD.t,0,PAD.t+cH);
       g.addColorStop(0, lineColor+'22'); g.addColorStop(1, lineColor+'00');
       ctx.fillStyle = g; ctx.fill();
-
       ctx.beginPath(); ctx.strokeStyle = lineColor; ctx.lineWidth = 1.5;
       lineVals.forEach((v,i) => { const x=xOf(i),y=yLine(v); i===0?ctx.moveTo(x,y):ctx.lineTo(x,y); });
       ctx.stroke();
@@ -531,18 +979,16 @@ canvas { display: block; width: 100%; }
       });
     }
 
-    /* X labels */
+    // Show fewer x-labels when many days
+    const step = n > 30 ? Math.ceil(n / 10) : n > 14 ? 2 : 1;
     ctx.fillStyle = C.muted; ctx.font = '9px system-ui'; ctx.textAlign = 'center';
-    labels.forEach((l,i) => ctx.fillText(l, xOf(i), H-4));
+    labels.forEach((l,i) => { if (i % step === 0) ctx.fillText(l, xOf(i), H-4); });
 
-    /* Left Y */
     ctx.textAlign = 'right';
     for (let i=0; i<=3; i++) {
       const v = maxBar*(1-i/3), y = PAD.t+(cH/3)*i;
       ctx.fillText(v>=1000?(v/1000).toFixed(1)+'k':v.toFixed(0), PAD.l-5, y+4);
     }
-
-    /* Right Y */
     if (lineVals) {
       ctx.textAlign = 'left'; ctx.fillStyle = lineColor+'BB';
       for (let i=0; i<=3; i++) {
@@ -550,8 +996,6 @@ canvas { display: block; width: 100%; }
         ctx.fillText(v>=1000?(v/1000).toFixed(1)+'k':Math.round(v), W-PAD.r+5, y+4);
       }
     }
-
-    /* Legend */
     const items = [[barColor, barLabel]];
     if (lineVals) items.push([lineColor, lineLabel]);
     items.forEach(([color,label],i) => {
@@ -562,40 +1006,36 @@ canvas { display: block; width: 100%; }
     });
   }
 
-  /* ── Render: Meta tab ──────────────────────────────────────────────────── */
+  /* ────────────────────────────────────────────────────────────────────────
+     RENDER TABS
+  ──────────────────────────────────────────────────────────────────────── */
+  function shortName(s, max=22) {
+    const clean = (s||'').replace(/\[([^\]]+)\]/g, (_,m)=>m).replace(/\s+/g,' ').trim();
+    return clean.length > max ? clean.slice(0, max) + '…' : clean;
+  }
+
   function renderMeta(d) {
-    const m = d.meta;
+    const m   = d.meta;
     const cpc = m.clicks > 0 ? m.total / m.clicks : 0;
-    const uniqCamps = new Set(m.rows.map(r => r.campaign)).size;
-
-    document.getElementById('m-spend').innerHTML      = `<span class="kpi-unit">R$</span> <b>${Math.round(m.total).toLocaleString('pt-BR')}</b>`;
-    document.getElementById('m-clicks').innerHTML     = `<b>${f.num(m.clicks)}</b>`;
-    document.getElementById('m-cpc').innerHTML        = `<span class="kpi-unit">R$</span> <b>${f.brl2(cpc)}</b>`;
-    document.getElementById('m-camps').innerHTML      = `<b>${uniqCamps}</b>`;
-
-    const labels = m.daily.map(r => f.dd(r.date));
-    const spend  = m.daily.map(r => r.spend);
-    const clicks = m.daily.map(r => r.clicks);
-    drawBarChart('chartMeta', labels, spend, clicks, C.meta, C.accent, 'Investimento', 'Cliques');
-
-    /* Click bars */
+    document.getElementById('m-spend').innerHTML  = `<span class="kpi-unit">R$</span> <b>${Math.round(m.total).toLocaleString('pt-BR')}</b>`;
+    document.getElementById('m-clicks').innerHTML = `<b>${f.num(m.clicks)}</b>`;
+    document.getElementById('m-cpc').innerHTML    = `<span class="kpi-unit">R$</span> <b>${f.brl2(cpc)}</b>`;
+    document.getElementById('m-camps').innerHTML  = `<b>${new Set(m.rows.map(r=>r.campaign)).size}</b>`;
+    const labels = m.daily.map(r=>f.dd(r.date));
+    drawBarChart('chartMeta', labels, m.daily.map(r=>r.spend), m.daily.map(r=>r.clicks), C.meta, C.accent, 'Investimento','Cliques');
     const maxC = Math.max(...m.camps.map(c=>c.clicks)) || 1;
-    document.getElementById('metaClickBars').innerHTML = m.camps.slice(0,6).map(c => {
-      const label = shortName(c.name);
-      return `<div class="bar-row">
-        <span class="bar-label" title="${c.name}">${label}</span>
+    document.getElementById('metaClickBars').innerHTML = m.camps.slice(0,6).map(c => `
+      <div class="bar-row">
+        <span class="bar-label" title="${c.name}">${shortName(c.name)}</span>
         <div class="bar-track"><div class="bar-fill" style="width:${(c.clicks/maxC*100).toFixed(1)}%;background:${C.meta}"></div></div>
         <span class="bar-val">${f.num(c.clicks)}</span>
         <span class="bar-pct">${f.pct(c.clicks/m.clicks*100)}</span>
-      </div>`;
-    }).join('');
-
-    /* Camp list */
+      </div>`).join('');
     const maxS = m.camps[0]?.spend || 1;
     document.getElementById('metaCamps').innerHTML = m.camps.slice(0,8).map(c => `
       <div class="camp-item">
         <div class="camp-header">
-          <span class="camp-name"><span class="camp-dot" style="background:${C.meta}"></span>${shortName(c.name, 50)}</span>
+          <span class="camp-name"><span class="camp-dot" style="background:${C.meta}"></span>${shortName(c.name,50)}</span>
           <span class="camp-spend">${f.brl(c.spend)}</span>
           <span class="camp-clicks">${f.num(c.clicks)} cliq.</span>
         </div>
@@ -603,22 +1043,15 @@ canvas { display: block; width: 100%; }
       </div>`).join('');
   }
 
-  /* ── Render: Google tab ────────────────────────────────────────────────── */
   function renderGoogle(d) {
-    const g = d.google;
+    const g   = d.google;
     const cpc = g.clicks > 0 ? g.total / g.clicks : 0;
-    const uniqCamps = new Set(g.rows.map(r => r.campaign)).size;
-
     document.getElementById('g-spend').innerHTML  = `<span class="kpi-unit">R$</span> <b>${Math.round(g.total).toLocaleString('pt-BR')}</b>`;
     document.getElementById('g-clicks').innerHTML = `<b>${f.num(g.clicks)}</b>`;
     document.getElementById('g-cpc').innerHTML    = `<span class="kpi-unit">R$</span> <b>${f.brl2(cpc)}</b>`;
-    document.getElementById('g-camps').innerHTML  = `<b>${uniqCamps}</b>`;
-
-    const labels = g.daily.map(r => f.dd(r.date));
-    const spend  = g.daily.map(r => r.spend);
-    const clicks = g.daily.map(r => r.clicks);
-    drawBarChart('chartGoogle', labels, spend, clicks, C.google, C.accent, 'Investimento', 'Cliques');
-
+    document.getElementById('g-camps').innerHTML  = `<b>${new Set(g.rows.map(r=>r.campaign)).size}</b>`;
+    const labels = g.daily.map(r=>f.dd(r.date));
+    drawBarChart('chartGoogle', labels, g.daily.map(r=>r.spend), g.daily.map(r=>r.clicks), C.google, C.accent, 'Investimento','Cliques');
     const maxC = Math.max(...g.camps.map(c=>c.clicks)) || 1;
     document.getElementById('googleClickBars').innerHTML = g.camps.slice(0,6).map(c => `
       <div class="bar-row">
@@ -627,12 +1060,11 @@ canvas { display: block; width: 100%; }
         <span class="bar-val">${f.num(c.clicks)}</span>
         <span class="bar-pct">${f.pct(c.clicks/g.clicks*100)}</span>
       </div>`).join('');
-
     const maxS = g.camps[0]?.spend || 1;
     document.getElementById('googleCamps').innerHTML = g.camps.slice(0,8).map(c => `
       <div class="camp-item">
         <div class="camp-header">
-          <span class="camp-name"><span class="camp-dot" style="background:${C.google}"></span>${shortName(c.name, 50)}</span>
+          <span class="camp-name"><span class="camp-dot" style="background:${C.google}"></span>${shortName(c.name,50)}</span>
           <span class="camp-spend">${f.brl(c.spend)}</span>
           <span class="camp-clicks">${f.num(c.clicks)} cliq.</span>
         </div>
@@ -640,76 +1072,63 @@ canvas { display: block; width: 100%; }
       </div>`).join('');
   }
 
-  /* ── Render: GA4 tab ───────────────────────────────────────────────────── */
   function renderGA4(d) {
-    const a = d.ga4;
-    const avg   = a.daily.length > 0 ? a.total / a.daily.length : 0;
-    const topSrc= a.sources[0] || ['—', 0];
-
+    const a    = d.ga4;
+    const avg  = a.daily.length > 0 ? a.total / a.daily.length : 0;
+    const topS = a.sources[0] || ['—', 0];
     document.getElementById('a-sessions').innerHTML  = `<b>${f.num(a.total)}</b>`;
     document.getElementById('a-avg').innerHTML       = `<b>${f.num(avg)}</b>`;
-    document.getElementById('a-top-src').innerHTML   = `<b>${topSrc[0]}</b>`;
-    document.getElementById('a-top-src-sub').textContent = `${f.num(topSrc[1])} sessões`;
+    document.getElementById('a-top-src').innerHTML   = `<b>${topS[0]}</b>`;
+    document.getElementById('a-top-src-sub').textContent = `${f.num(topS[1])} sessões`;
     document.getElementById('a-srcs').innerHTML      = `<b>${a.sources.length}</b>`;
-
-    const labels   = a.daily.map(r => f.dd(r.date));
-    const sessions = a.daily.map(r => r.sessions);
-    drawBarChart('chartGA4', labels, sessions, null, C.ga4, null, 'Sessões', null);
-
+    const labels   = a.daily.map(r=>f.dd(r.date));
+    drawBarChart('chartGA4', labels, a.daily.map(r=>r.sessions), null, C.ga4, null, 'Sessões', null);
     const maxS = a.sources[0]?.[1] || 1;
-    const srcColors = { ig: C.meta, facebook: C.meta, google: C.google, Direto: C.accent };
-    document.getElementById('ga4SourceBars').innerHTML = a.sources.slice(0,8).map(([src,n]) => {
-      const color = srcColors[src] || C.muted;
-      return `<div class="bar-row">
+    const srcColors = { ig:C.meta, facebook:C.meta, google:C.google, Direto:C.accent };
+    document.getElementById('ga4SourceBars').innerHTML = a.sources.slice(0,8).map(([src,n]) => `
+      <div class="bar-row">
         <span class="bar-label" style="text-transform:none">${src}</span>
-        <div class="bar-track"><div class="bar-fill" style="width:${(n/maxS*100).toFixed(1)}%;background:${color}"></div></div>
+        <div class="bar-track"><div class="bar-fill" style="width:${(n/maxS*100).toFixed(1)}%;background:${srcColors[src]||C.muted}"></div></div>
         <span class="bar-val">${f.num(n)}</span>
         <span class="bar-pct">${f.pct(n/a.total*100)}</span>
-      </div>`;
-    }).join('');
-
+      </div>`).join('');
     const tbody = document.querySelector('#ga4CampTable tbody');
     tbody.innerHTML = a.camps.map(r => `
       <tr>
-        <td title="${r.camp}">${shortName(r.camp, 38)}</td>
+        <td title="${r.camp}">${shortName(r.camp,38)}</td>
         <td class="dim">${r.src}</td>
         <td>${f.num(r.sessions)}</td>
       </tr>`).join('');
   }
 
-  /* ── Helpers ───────────────────────────────────────────────────────────── */
-  function shortName(s, max=22) {
-    const clean = (s||'').replace(/\[([^\]]+)\]/g, (_,m)=>m).replace(/\s+/g,' ').trim();
-    return clean.length > max ? clean.slice(0, max) + '…' : clean;
-  }
-
-  function setHeader(dates) {
-    if (!dates.length) return;
-    const [y] = dates[0].split('-');
-    document.getElementById('dateRange').textContent =
-      `${f.dd(dates[0])} – ${f.dd(dates[dates.length-1])} · ${y}`;
-  }
-
   function redrawActive() {
-    if (!window._data) return;
+    const d = window._data; if (!d) return;
     const active = document.querySelector('.tab-btn.active')?.dataset.tab;
-    if (active === 'meta')   drawBarChart('chartMeta',   window._data.meta.daily.map(r=>f.dd(r.date)),   window._data.meta.daily.map(r=>r.spend),   window._data.meta.daily.map(r=>r.clicks),   C.meta,   C.accent, 'Investimento','Cliques');
-    if (active === 'google') drawBarChart('chartGoogle', window._data.google.daily.map(r=>f.dd(r.date)), window._data.google.daily.map(r=>r.spend), window._data.google.daily.map(r=>r.clicks), C.google, C.accent, 'Investimento','Cliques');
-    if (active === 'ga4')    drawBarChart('chartGA4',    window._data.ga4.daily.map(r=>f.dd(r.date)),    window._data.ga4.daily.map(r=>r.sessions), null, C.ga4, null, 'Sessões', null);
+    if (active==='meta')   { drawBarChart('chartMeta',   d.meta.daily.map(r=>f.dd(r.date)),   d.meta.daily.map(r=>r.spend),   d.meta.daily.map(r=>r.clicks),   C.meta,   C.accent,'Investimento','Cliques'); }
+    if (active==='google') { drawBarChart('chartGoogle', d.google.daily.map(r=>f.dd(r.date)), d.google.daily.map(r=>r.spend), d.google.daily.map(r=>r.clicks), C.google, C.accent,'Investimento','Cliques'); }
+    if (active==='ga4')    { drawBarChart('chartGA4',    d.ga4.daily.map(r=>f.dd(r.date)),    d.ga4.daily.map(r=>r.sessions), null, C.ga4, null,'Sessões',null); }
   }
 
-  /* ── Main ──────────────────────────────────────────────────────────────── */
-  async function init() {
-    const badge = document.getElementById('statusBadge');
+  /* ────────────────────────────────────────────────────────────────────────
+     LOAD DATA
+  ──────────────────────────────────────────────────────────────────────── */
+  async function loadData(from, to) {
+    const overlay = document.getElementById('loadingOverlay');
+    const badge   = document.getElementById('statusBadge');
+    overlay.classList.add('show');
+    badge.textContent = 'carregando'; badge.className = 'status-badge loading';
+
+    const url = `${API_BASE}?api_key=${API_KEY}&date_from=${from}&date_to=${to}&fields=${API_FIELDS}`;
     let rows;
 
     try {
-      const res = await fetch(API);
+      const res = await fetch(url);
       if (!res.ok) throw new Error('HTTP ' + res.status);
       const json = await res.json();
       rows = json.data;
-      if (!rows?.length) throw new Error('Resposta vazia');
+      if (!rows?.length) throw new Error('Sem dados');
       badge.textContent = 'ao vivo'; badge.className = 'status-badge live';
+      const b = document.getElementById('errBanner'); b.style.display = 'none';
     } catch (e) {
       console.warn('Windsor.ai:', e.message);
       badge.textContent = 'snapshot'; badge.className = 'status-badge';
@@ -718,17 +1137,20 @@ canvas { display: block; width: 100%; }
       b.style.display = 'block';
       b.textContent = 'Windsor.ai indisponível (CORS em browser direto) — usando snapshot embutido com dados reais de 18–24/06.';
       rows = SNAPSHOT;
+    } finally {
+      overlay.classList.remove('show');
     }
 
     const d = process(rows);
     window._data = d;
-    setHeader(d.dates);
     renderMeta(d);
     renderGoogle(d);
     renderGA4(d);
   }
 
-  /* ── Snapshot (Jun 18–24 2026, dados reais dos 2 primeiros dias) ──────── */
+  /* ────────────────────────────────────────────────────────────────────────
+     SNAPSHOT (Jun 18–24 2026, dados reais dos 2 primeiros dias)
+  ──────────────────────────────────────────────────────────────────────── */
   const SNAPSHOT = [
     {"date":"2026-06-18","datasource":"facebook","source":"facebook","campaign":"[LX][TRAFEGO-SEGUIDORES][ABO][PUBLICO_FRIO]","clicks":265,"sessions":null,"spend":136.06},
     {"date":"2026-06-18","datasource":"facebook","source":"facebook","campaign":"[MSG][GRINGO][RJ][NUVENS-ORG]","clicks":31,"sessions":null,"spend":56.29},
@@ -807,7 +1229,13 @@ canvas { display: block; width: 100%; }
     {"date":"2026-06-24","datasource":"googleanalytics4","source":"google","campaign":"(organic)","clicks":null,"sessions":85,"spend":null},
   ];
 
-  init();
+  /* ── Boot with default 7d ─────────────────────────────────────────────── */
+  const today = todayISO();
+  const defaultFrom = addDays(today, -6);
+  calState.startDate = defaultFrom;
+  calState.endDate   = today;
+  loadData(defaultFrom, today);
+
 })();
 </script>
 </body>
