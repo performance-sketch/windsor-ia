@@ -949,6 +949,8 @@ canvas { display: block; width: 100%; }
       calState.picking   = 'end';
       calState.hovering  = null;
       document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+      renderCalendar();
+      document.getElementById('calApply').disabled = true;
     } else {
       let s = calState.startDate, e = iso;
       if (s > e) { [s, e] = [e, s]; }
@@ -958,9 +960,9 @@ canvas { display: block; width: 100%; }
       calState.picking   = 'start';
       calState.hovering  = null;
       document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+      // Auto-apply imediatamente ao selecionar o segundo dia
+      applyDateRange(s, e);
     }
-    renderCalendar();
-    document.getElementById('calApply').disabled = !(calState.startDate && calState.endDate);
   }
 
   function updateSelectionText() {
@@ -968,10 +970,35 @@ canvas { display: block; width: 100%; }
     if (!calState.startDate) {
       el.innerHTML = 'Selecione a <span>data inicial</span>';
     } else if (!calState.endDate) {
-      el.innerHTML = `Início: <span>${f.display(calState.startDate)}</span> — selecione o <span>fim</span>`;
+      el.innerHTML = `<span>${f.display(calState.startDate)}</span> selecionado — clique no <span>dia final</span> (ou no mesmo dia)`;
     } else {
       const days = diffDays(calState.startDate, calState.endDate) + 1;
-      el.innerHTML = `<span>${f.display(calState.startDate)}</span> até <span>${f.display(calState.endDate)}</span> · ${days} dias`;
+      if (days === 1) {
+        el.innerHTML = `<span>${f.display(calState.startDate)}</span> · 1 dia`;
+      } else {
+        el.innerHTML = `<span>${f.display(calState.startDate)}</span> até <span>${f.display(calState.endDate)}</span> · ${days} dias`;
+      }
+    }
+  }
+
+  function applyDateRange(s, e) {
+    const today = todayISO();
+    const days  = diffDays(s, e) + 1;
+    const label = document.getElementById('daterangeLabel');
+    if (days === 1 && s === today)       label.textContent = 'Hoje';
+    else if (days === 1)                 label.textContent = f.display(s);
+    else if (days === 7  && e === today) label.textContent = 'Últimos 7 dias';
+    else if (days === 14 && e === today) label.textContent = 'Últimos 14 dias';
+    else if (days === 30 && e === today) label.textContent = 'Últimos 30 dias';
+    else if (days === 60 && e === today) label.textContent = 'Últimos 60 dias';
+    else if (days === 90 && e === today) label.textContent = 'Últimos 90 dias';
+    else                                 label.textContent = `${f.display(s)} – ${f.display(e)}`;
+    closePicker();
+    loadData(s, e);
+    if (REZDY_BOOKINGS !== null) {
+      const rz = processRezdy(REZDY_BOOKINGS, s, e);
+      window._rzData = rz;
+      renderRezdy(rz);
     }
   }
 
@@ -979,14 +1006,15 @@ canvas { display: block; width: 100%; }
     btn.addEventListener('click', () => {
       const days = +btn.dataset.days;
       const today = todayISO();
-      calState.startDate = addDays(today, -(days - 1));
+      const s = addDays(today, -(days - 1));
+      calState.startDate = s;
       calState.endDate   = today;
       calState.picking   = 'start';
       calState.hovering  = null;
       document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-      document.getElementById('calApply').disabled = false;
-      renderCalendar();
+      // Presets aplicam direto sem precisar clicar Aplicar
+      applyDateRange(s, today);
     });
   });
 
@@ -1023,22 +1051,7 @@ canvas { display: block; width: 100%; }
 
   document.getElementById('calApply').addEventListener('click', () => {
     if (!calState.startDate || !calState.endDate) return;
-    const days = diffDays(calState.startDate, calState.endDate) + 1;
-    const label = document.getElementById('daterangeLabel');
-    if (days === 7)  label.textContent = 'Últimos 7 dias';
-    else if (days === 14) label.textContent = 'Últimos 14 dias';
-    else if (days === 30) label.textContent = 'Últimos 30 dias';
-    else if (days === 60) label.textContent = 'Últimos 60 dias';
-    else if (days === 90) label.textContent = 'Últimos 90 dias';
-    else label.textContent = `${f.display(calState.startDate)} – ${f.display(calState.endDate)}`;
-    closePicker();
-    loadData(calState.startDate, calState.endDate);
-    // Re-process Rezdy for new date range
-    if (REZDY_BOOKINGS !== null) {
-      const rz = processRezdy(REZDY_BOOKINGS, calState.startDate, calState.endDate);
-      window._rzData = rz;
-      renderRezdy(rz);
-    }
+    applyDateRange(calState.startDate, calState.endDate);
   });
 
   /* ────────────────────────────────────────────────────────────────────────
