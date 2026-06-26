@@ -14,7 +14,7 @@ import os, re, sys, time, requests
 from datetime import date, timedelta
 import json as _json
 
-API_KEY  = os.environ.get("REZDY_API_KEY", "")
+API_KEY  = os.environ.get("REZDY_API_KEY", "dc7f8d97256e484b8763a983ded2ba22")
 BASE_URL = "https://api.rezdy.com/v1"
 SCRIPT_DIR  = os.path.dirname(os.path.abspath(__file__))
 HTML_FILE   = os.path.normpath(os.path.join(SCRIPT_DIR, "analise-rezdy-periodos.html"))
@@ -22,7 +22,7 @@ JSON_FILE   = os.path.normpath(os.path.join(SCRIPT_DIR, "..", "data", "periodos.
 KPI_JSON    = os.path.normpath(os.path.join(SCRIPT_DIR, "..", "data", "rezdy_kpis.json"))
 
 if not API_KEY:
-    sys.exit("ERROR: REZDY_API_KEY environment variable is not set.")
+    sys.exit("ERROR: REZDY_API_KEY não definida e chave padrão não encontrada.")
 
 # Period comparison (analise-rezdy-periodos.html)
 STOP_DATE   = "2025-05-25"
