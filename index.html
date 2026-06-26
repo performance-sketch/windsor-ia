@@ -20,6 +20,8 @@
   --ga4:     #34D399;
   --pos:     #1FD98A;
   --neg:     #FF5A72;
+  --rezdy:   #E87040;
+  --ig:      #E1306C;
 }
 *,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { background: var(--ground); }
@@ -372,6 +374,118 @@ header::after {
 @keyframes breathe  { 0%,100% { opacity:1; } 50% { opacity:.35; } }
 @media (prefers-reduced-motion: reduce) { .fade-in, .status-badge, .loading-spinner { animation: none !important; } }
 canvas { display: block; width: 100%; }
+
+/* ── Organic Instagram divider ───────────────────────────────────────────── */
+.organic-divider {
+  display: flex; align-items: center; gap: 14px;
+  padding: 18px 28px 0;
+  font-size: 9px; letter-spacing: 0.26em; text-transform: uppercase; color: var(--ig);
+}
+.organic-divider::before {
+  content: ''; display: block; width: 3px; height: 14px;
+  background: var(--ig); border-radius: 2px; flex-shrink: 0;
+}
+.organic-divider::after {
+  content: ''; flex: 1; height: 1px; background: var(--border);
+}
+
+/* ── Instagram KPI row override ─────────────────────────────────────────── */
+#igKpiRow {
+  border-top: none;
+  border-bottom: 1px solid var(--border);
+}
+
+/* ── Instagram post grid ─────────────────────────────────────────────────── */
+.post-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
+  gap: 12px;
+  margin-top: 4px;
+}
+.post-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+  transition: border-color 0.15s, transform 0.15s;
+}
+.post-card:hover { border-color: rgba(225,48,108,.4); transform: translateY(-2px); }
+.post-thumb-wrap {
+  width: 100%; aspect-ratio: 1;
+  overflow: hidden; background: var(--dim); position: relative;
+}
+.post-thumb {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+}
+.post-thumb-placeholder {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 36px; opacity: 0.25; background: var(--dim);
+}
+.post-media-badge {
+  position: absolute; top: 6px; right: 6px;
+  background: rgba(7,16,31,0.8);
+  color: var(--muted); font-size: 7px; letter-spacing: 0.14em; text-transform: uppercase;
+  padding: 2px 6px; border-radius: 2px;
+}
+.post-info { padding: 10px 12px 12px; }
+.post-date {
+  font-size: 9px; letter-spacing: 0.12em; color: var(--muted);
+  text-transform: uppercase; margin-bottom: 9px;
+}
+.post-stat-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
+.post-stat { display: flex; flex-direction: column; }
+.post-stat-val { font-size: 13px; font-weight: 600; color: var(--text); font-variant-numeric: tabular-nums; line-height: 1.2; }
+.post-stat-lbl { font-size: 8px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+.post-link {
+  display: block; width: 100%;
+  padding: 5px 10px 4px;
+  background: rgba(225,48,108,0.08);
+  border: 1px solid rgba(225,48,108,0.2);
+  border-radius: 2px;
+  color: var(--ig); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase;
+  text-decoration: none; text-align: center;
+  transition: background 0.12s;
+}
+.post-link:hover { background: rgba(225,48,108,0.16); }
+.post-empty {
+  grid-column: 1/-1;
+  text-align: center; padding: 48px 20px;
+  color: var(--muted); font-size: 12px; line-height: 1.8;
+}
+
+/* ── Status chips (Rezdy) ────────────────────────────────────────────────── */
+.status-chip {
+  display: inline-block;
+  padding: 2px 7px 1px; border-radius: 10px;
+  font-size: 8px; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 600;
+}
+.status-chip.confirmed { background: rgba(31,217,138,.12); color: var(--pos); }
+.status-chip.cancelled { background: rgba(255,90,114,.10); color: var(--neg); }
+.status-chip.abandoned { background: rgba(240,160,32,.10); color: var(--gold); }
+.status-chip.unknown   { background: var(--dim); color: var(--muted); }
+
+/* ── Rezdy tables ────────────────────────────────────────────────────────── */
+.rzdy-table { width: 100%; border-collapse: collapse; }
+.rzdy-table th {
+  font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--muted); font-weight: 400; padding: 0 8px 10px 0;
+  text-align: left; border-bottom: 1px solid var(--border);
+}
+.rzdy-table th:last-child { padding-right: 0; text-align: right; }
+.rzdy-table td {
+  padding: 8px 8px 0 0; font-size: 11px; color: var(--text);
+  font-variant-numeric: tabular-nums; vertical-align: middle;
+}
+.rzdy-table td:last-child { padding-right: 0; text-align: right; }
+.rzdy-table td.dim { color: var(--muted); font-size: 10px; }
+.rzdy-table .coupon-code {
+  font-family: 'Courier New', monospace; font-size: 10px;
+  background: rgba(0,200,176,0.08); padding: 2px 7px;
+  border: 1px solid rgba(0,200,176,0.2); border-radius: 2px;
+  color: var(--accent); letter-spacing: 0.08em;
+}
+.rzdy-loading { text-align: center; padding: 32px; color: var(--muted); font-size: 11px; }
 </style>
 </head>
 <body>
@@ -440,6 +554,9 @@ canvas { display: block; width: 100%; }
   <button class="tab-btn" data-tab="ga4"    style="--tab-color:var(--ga4)">
     <span class="dot"></span>Analytics
   </button>
+  <button class="tab-btn" data-tab="rezdy"  style="--tab-color:var(--rezdy)">
+    <span class="dot"></span>Reservas
+  </button>
 </nav>
 
 <!-- ═══════════════════════════════════════════════════════════════════════ -->
@@ -482,6 +599,39 @@ canvas { display: block; width: 100%; }
       <div class="card topo fade-in" style="animation-delay:.12s">
         <div class="card-label">Top Campanhas — Investimento</div>
         <div class="camp-rows" id="metaCamps"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── Visão Orgânica — Instagram ──────────────────────────────────── -->
+  <div class="organic-divider">Visão Orgânica — Instagram</div>
+  <div class="kpi-row" id="igKpiRow" style="display:none">
+    <div class="kpi topo" style="--kpi-color:var(--ig)">
+      <div class="kpi-eyebrow">Alcance Orgânico</div>
+      <div class="kpi-value" id="ig-reach"><b>—</b></div>
+      <div class="kpi-sub">total do período</div>
+    </div>
+    <div class="kpi topo" style="--kpi-color:var(--ig)">
+      <div class="kpi-eyebrow">Impressões</div>
+      <div class="kpi-value" id="ig-impressions"><b>—</b></div>
+      <div class="kpi-sub">total do período</div>
+    </div>
+    <div class="kpi topo" style="--kpi-color:var(--ig)">
+      <div class="kpi-eyebrow">Engajamento</div>
+      <div class="kpi-value" id="ig-engagement"><b>—</b></div>
+      <div class="kpi-sub">curtidas + comentários</div>
+    </div>
+    <div class="kpi topo" style="--kpi-color:var(--ig)">
+      <div class="kpi-eyebrow">Posts no Período</div>
+      <div class="kpi-value" id="ig-posts"><b>—</b></div>
+      <div class="kpi-sub">publicações</div>
+    </div>
+  </div>
+  <div class="body" style="padding-top:16px">
+    <div class="card topo fade-in" style="animation-delay:.16s">
+      <div class="card-label">Posts Recentes — Alcance &amp; Engajamento</div>
+      <div class="post-grid" id="igOrganicGrid">
+        <div class="post-empty" id="igEmpty">Buscando dados orgânicos do Instagram via Windsor.ai…</div>
       </div>
     </div>
   </div>
@@ -581,6 +731,55 @@ canvas { display: block; width: 100%; }
 </div>
 
 <!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- TAB: RESERVAS (REZDY)                                                  -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<div class="tab-panel" id="tab-rezdy">
+  <div class="kpi-row">
+    <div class="kpi topo" style="--kpi-color:var(--rezdy)">
+      <div class="kpi-eyebrow">Total de Reservas</div>
+      <div class="kpi-value" id="rz-total"><b>—</b></div>
+      <div class="kpi-sub">no período</div>
+    </div>
+    <div class="kpi topo" style="--kpi-color:var(--accent)">
+      <div class="kpi-eyebrow">Fulfillments</div>
+      <div class="kpi-value" id="rz-fulfill"><b>—</b></div>
+      <div class="kpi-sub">voos realizados no período</div>
+    </div>
+    <div class="kpi topo" style="--kpi-color:var(--gold)">
+      <div class="kpi-eyebrow">Cupons Ativos</div>
+      <div class="kpi-value" id="rz-coupons"><b>—</b></div>
+      <div class="kpi-sub">códigos utilizados</div>
+    </div>
+    <div class="kpi topo" style="--kpi-color:var(--pos)">
+      <div class="kpi-eyebrow">Confirmadas</div>
+      <div class="kpi-value" id="rz-confirmed"><b>—</b></div>
+      <div class="kpi-sub" id="rz-confirmed-sub">reservas confirmadas</div>
+    </div>
+  </div>
+  <div class="body">
+    <div id="rzErrBanner" class="error-banner"></div>
+    <div class="card topo fade-in" style="animation-delay:.04s">
+      <div class="card-label">Reservas Confirmadas por Dia</div>
+      <canvas id="chartRezdy" height="150"></canvas>
+    </div>
+    <div class="two-col">
+      <div class="card topo fade-in" style="animation-delay:.08s">
+        <div class="card-label">Todos os Status — Confirmados</div>
+        <div id="rzdyStatusList">
+          <div class="rzdy-loading">Carregando dados de reservas…</div>
+        </div>
+      </div>
+      <div class="card topo fade-in" style="animation-delay:.12s">
+        <div class="card-label">Cupons Ativos no Período</div>
+        <div id="rzdyCouponList">
+          <div class="rzdy-loading">Carregando cupons…</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
 <script>
 (function () {
   'use strict';
@@ -588,11 +787,13 @@ canvas { display: block; width: 100%; }
   const API_KEY    = '2a3b6cc17507c2540c6b98c651a31cd95d6b';
   const API_BASE   = 'https://connectors.windsor.ai/all';
   const API_FIELDS = 'date,datasource,account_name,source,campaign,clicks,sessions,spend';
+  const IG_FIELDS  = 'date,datasource,post_id,media_type,permalink,thumbnail_url,like_count,comments_count,impressions,reach,saved,shares,video_views';
   const MAX_DAYS   = 90;
 
   const C = {
     border:'#162436', muted:'#3D5878', text:'#C4D4EC', surface:'#0F1F33',
     accent:'#00C8B0', gold:'#F0A020', meta:'#8B7CF8', google:'#4DAAFF', ga4:'#34D399',
+    rezdy:'#E87040', ig:'#E1306C',
   };
 
   const f = {
@@ -609,14 +810,13 @@ canvas { display: block; width: 100%; }
      CALENDAR PICKER
   ──────────────────────────────────────────────────────────────────────── */
   const calState = {
-    viewLeft:  new Date(),   // first calendar month displayed
-    startDate: null,         // selected start ISO string
-    endDate:   null,         // selected end ISO string
-    hovering:  null,         // date being hovered
-    picking:   'start',      // 'start' | 'end'
+    viewLeft:  new Date(),
+    startDate: null,
+    endDate:   null,
+    hovering:  null,
+    picking:   'start',
   };
 
-  // today string
   function todayISO() {
     const n = new Date();
     return f.iso(n);
@@ -632,10 +832,6 @@ canvas { display: block; width: 100%; }
     return Math.round((new Date(b+'T12:00:00') - new Date(a+'T12:00:00')) / 86400000);
   }
 
-  function isoToMonthKey(iso) {
-    return iso.slice(0,7); // 'YYYY-MM'
-  }
-
   function monthName(y, m) {
     const M = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho',
                'Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
@@ -646,27 +842,24 @@ canvas { display: block; width: 100%; }
     const today = todayISO();
     const container = document.getElementById('calMonths');
 
-    // Two months: left = calState.viewLeft, right = +1
     const months = [];
     const lDate = new Date(calState.viewLeft.getFullYear(), calState.viewLeft.getMonth(), 1);
     for (let i = 0; i < 2; i++) {
       months.push(new Date(lDate.getFullYear(), lDate.getMonth() + i, 1));
     }
 
-    // Min allowed date (today - MAX_DAYS)
     const minDate = addDays(today, -MAX_DAYS);
 
     container.innerHTML = months.map((mDate, idx) => {
       const y = mDate.getFullYear();
       const m = mDate.getMonth();
       const daysInMonth = new Date(y, m+1, 0).getDate();
-      const firstDow    = new Date(y, m, 1).getDay(); // 0=Sun
+      const firstDow    = new Date(y, m, 1).getDay();
 
       const canPrev = idx === 0;
       const canNext = idx === 1;
 
       let cells = '';
-      // Empty leading cells
       for (let i = 0; i < firstDow; i++) {
         cells += `<span class="cal-day cal-day-empty"></span>`;
       }
@@ -683,7 +876,6 @@ canvas { display: block; width: 100%; }
                            iso > (calState.startDate < rangeEnd ? calState.startDate : rangeEnd) &&
                            iso < (calState.startDate < rangeEnd ? rangeEnd : calState.startDate);
 
-        // Would exceed MAX_DAYS from start
         let wouldExceed = false;
         if (calState.picking === 'end' && calState.startDate) {
           const d1 = diffDays(calState.startDate, iso);
@@ -718,7 +910,6 @@ canvas { display: block; width: 100%; }
       </div>`;
     }).join('');
 
-    // Nav buttons
     const prevBtn = document.getElementById('calPrev');
     const nextBtn = document.getElementById('calNext');
     if (prevBtn) {
@@ -738,7 +929,6 @@ canvas { display: block; width: 100%; }
       });
     }
 
-    // Day click handlers
     container.querySelectorAll('.cal-day:not(:disabled):not(.cal-day-empty)').forEach(btn => {
       btn.addEventListener('click', () => onDayClick(btn.dataset.iso));
       btn.addEventListener('mouseenter', () => {
@@ -760,10 +950,9 @@ canvas { display: block; width: 100%; }
       calState.hovering  = null;
       document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
     } else {
-      // Ensure start < end
       let s = calState.startDate, e = iso;
       if (s > e) { [s, e] = [e, s]; }
-      if (diffDays(s, e) > MAX_DAYS) return; // silently block
+      if (diffDays(s, e) > MAX_DAYS) return;
       calState.startDate = s;
       calState.endDate   = e;
       calState.picking   = 'start';
@@ -786,7 +975,6 @@ canvas { display: block; width: 100%; }
     }
   }
 
-  // Preset click
   document.querySelectorAll('.preset-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const days = +btn.dataset.days;
@@ -802,7 +990,6 @@ canvas { display: block; width: 100%; }
     });
   });
 
-  // Open / close picker
   const dateBtn = document.getElementById('daterangeBtn');
   const picker  = document.getElementById('calPicker');
 
@@ -837,7 +1024,6 @@ canvas { display: block; width: 100%; }
   document.getElementById('calApply').addEventListener('click', () => {
     if (!calState.startDate || !calState.endDate) return;
     const days = diffDays(calState.startDate, calState.endDate) + 1;
-    // Update button label
     const label = document.getElementById('daterangeLabel');
     if (days === 7)  label.textContent = 'Últimos 7 dias';
     else if (days === 14) label.textContent = 'Últimos 14 dias';
@@ -847,6 +1033,12 @@ canvas { display: block; width: 100%; }
     else label.textContent = `${f.display(calState.startDate)} – ${f.display(calState.endDate)}`;
     closePicker();
     loadData(calState.startDate, calState.endDate);
+    // Re-process Rezdy for new date range
+    if (REZDY_BOOKINGS !== null) {
+      const rz = processRezdy(REZDY_BOOKINGS, calState.startDate, calState.endDate);
+      window._rzData = rz;
+      renderRezdy(rz);
+    }
   });
 
   /* ────────────────────────────────────────────────────────────────────────
@@ -863,7 +1055,7 @@ canvas { display: block; width: 100%; }
   });
 
   /* ────────────────────────────────────────────────────────────────────────
-     DATA PROCESSING
+     DATA PROCESSING (Windsor.ai)
   ──────────────────────────────────────────────────────────────────────── */
   function process(rows) {
     const meta   = rows.filter(r => r.datasource === 'facebook'         && r.spend > 0);
@@ -979,7 +1171,6 @@ canvas { display: block; width: 100%; }
       });
     }
 
-    // Show fewer x-labels when many days
     const step = n > 30 ? Math.ceil(n / 10) : n > 14 ? 2 : 1;
     ctx.fillStyle = C.muted; ctx.font = '9px system-ui'; ctx.textAlign = 'center';
     labels.forEach((l,i) => { if (i % step === 0) ctx.fillText(l, xOf(i), H-4); });
@@ -1007,7 +1198,7 @@ canvas { display: block; width: 100%; }
   }
 
   /* ────────────────────────────────────────────────────────────────────────
-     RENDER TABS
+     RENDER TABS (Windsor.ai)
   ──────────────────────────────────────────────────────────────────────── */
   function shortName(s, max=22) {
     const clean = (s||'').replace(/\[([^\]]+)\]/g, (_,m)=>m).replace(/\s+/g,' ').trim();
@@ -1060,7 +1251,7 @@ canvas { display: block; width: 100%; }
         <span class="bar-val">${f.num(c.clicks)}</span>
         <span class="bar-pct">${f.pct(c.clicks/g.clicks*100)}</span>
       </div>`).join('');
-    const maxS = g.camps[0]?.spend || 1;
+    const maxS2 = g.camps[0]?.spend || 1;
     document.getElementById('googleCamps').innerHTML = g.camps.slice(0,8).map(c => `
       <div class="camp-item">
         <div class="camp-header">
@@ -1068,7 +1259,7 @@ canvas { display: block; width: 100%; }
           <span class="camp-spend">${f.brl(c.spend)}</span>
           <span class="camp-clicks">${f.num(c.clicks)} cliq.</span>
         </div>
-        <div class="camp-track"><div class="camp-fill" style="width:${(c.spend/maxS*100).toFixed(1)}%;background:${C.google}"></div></div>
+        <div class="camp-track"><div class="camp-fill" style="width:${(c.spend/maxS2*100).toFixed(1)}%;background:${C.google}"></div></div>
       </div>`).join('');
   }
 
@@ -1102,15 +1293,273 @@ canvas { display: block; width: 100%; }
   }
 
   function redrawActive() {
-    const d = window._data; if (!d) return;
+    const d = window._data;
     const active = document.querySelector('.tab-btn.active')?.dataset.tab;
-    if (active==='meta')   { drawBarChart('chartMeta',   d.meta.daily.map(r=>f.dd(r.date)),   d.meta.daily.map(r=>r.spend),   d.meta.daily.map(r=>r.clicks),   C.meta,   C.accent,'Investimento','Cliques'); }
-    if (active==='google') { drawBarChart('chartGoogle', d.google.daily.map(r=>f.dd(r.date)), d.google.daily.map(r=>r.spend), d.google.daily.map(r=>r.clicks), C.google, C.accent,'Investimento','Cliques'); }
-    if (active==='ga4')    { drawBarChart('chartGA4',    d.ga4.daily.map(r=>f.dd(r.date)),    d.ga4.daily.map(r=>r.sessions), null, C.ga4, null,'Sessões',null); }
+    if (active==='meta'   && d) { drawBarChart('chartMeta',   d.meta.daily.map(r=>f.dd(r.date)),   d.meta.daily.map(r=>r.spend),   d.meta.daily.map(r=>r.clicks),   C.meta,   C.accent,'Investimento','Cliques'); }
+    if (active==='google' && d) { drawBarChart('chartGoogle', d.google.daily.map(r=>f.dd(r.date)), d.google.daily.map(r=>r.spend), d.google.daily.map(r=>r.clicks), C.google, C.accent,'Investimento','Cliques'); }
+    if (active==='ga4'    && d) { drawBarChart('chartGA4',    d.ga4.daily.map(r=>f.dd(r.date)),    d.ga4.daily.map(r=>r.sessions), null, C.ga4, null,'Sessões',null); }
+    if (active==='rezdy' && window._rzData) {
+      const rz = window._rzData;
+      if (rz.daily.length > 0) {
+        drawBarChart('chartRezdy', rz.daily.map(r=>f.dd(r.date)), rz.daily.map(r=>r.confirmed), rz.daily.map(r=>r.total), C.rezdy, C.accent, 'Confirmadas', 'Total');
+      }
+    }
   }
 
   /* ────────────────────────────────────────────────────────────────────────
-     LOAD DATA
+     REZDY DATA
+  ──────────────────────────────────────────────────────────────────────── */
+  let REZDY_BOOKINGS = null;
+
+  async function loadRezdyData() {
+    try {
+      const res = await fetch('./data/rezdy_kpis.json');
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      REZDY_BOOKINGS = await res.json();
+    } catch (e) {
+      console.warn('Rezdy KPIs:', e.message);
+      REZDY_BOOKINGS = [];
+      const b = document.getElementById('rzErrBanner');
+      if (b) {
+        b.style.display = 'block';
+        b.textContent = 'Dados Rezdy não disponíveis. Execute rezdy/update_rezdy_data.py para gerar data/rezdy_kpis.json.';
+      }
+    }
+  }
+
+  function processRezdy(bookings, from, to) {
+    const inPeriod = bookings.filter(b => b.d >= from && b.d <= to);
+
+    // Fulfillments: session date (df) in selected period, confirmed
+    const fulfillments = bookings.filter(b => b.df && b.df >= from && b.df <= to && b.status === 'CONFIRMED');
+
+    // Status breakdown
+    const statusMap = {};
+    inPeriod.forEach(b => {
+      const s = b.status || 'UNKNOWN';
+      if (!statusMap[s]) statusMap[s] = { status: s, count: 0, revenue: 0 };
+      statusMap[s].count++;
+      if (s === 'CONFIRMED') statusMap[s].revenue += b.gross || 0;
+    });
+
+    // Active coupons in period
+    const couponMap = {};
+    inPeriod.forEach(b => {
+      if (b.coupon) {
+        if (!couponMap[b.coupon]) couponMap[b.coupon] = { code: b.coupon, count: 0, revenue: 0 };
+        couponMap[b.coupon].count++;
+        couponMap[b.coupon].revenue += b.gross || 0;
+      }
+    });
+
+    const confirmed = inPeriod.filter(b => b.status === 'CONFIRMED');
+    const confirmedRevenue = confirmed.reduce((s, b) => s + (b.gross || 0), 0);
+
+    // Daily series
+    const dateMap = {};
+    inPeriod.forEach(b => {
+      if (!dateMap[b.d]) dateMap[b.d] = { date: b.d, total: 0, confirmed: 0, revenue: 0 };
+      dateMap[b.d].total++;
+      if (b.status === 'CONFIRMED') {
+        dateMap[b.d].confirmed++;
+        dateMap[b.d].revenue += b.gross || 0;
+      }
+    });
+    const daily = Object.values(dateMap).sort((a, b) => a.date.localeCompare(b.date));
+
+    return {
+      total: inPeriod.length,
+      confirmed: confirmed.length,
+      confirmedRevenue,
+      fulfillments: fulfillments.length,
+      activeCoupons: Object.keys(couponMap).length,
+      byStatus: Object.values(statusMap).sort((a, b) => b.count - a.count),
+      coupons:  Object.values(couponMap).sort((a, b) => b.count - a.count),
+      daily,
+    };
+  }
+
+  function renderRezdy(d) {
+    if (!d) return;
+
+    document.getElementById('rz-total').innerHTML     = `<b>${f.num(d.total)}</b>`;
+    document.getElementById('rz-fulfill').innerHTML   = `<b>${f.num(d.fulfillments)}</b>`;
+    document.getElementById('rz-coupons').innerHTML   = `<b>${f.num(d.activeCoupons)}</b>`;
+    document.getElementById('rz-confirmed').innerHTML = `<b>${f.num(d.confirmed)}</b>`;
+    document.getElementById('rz-confirmed-sub').textContent =
+      d.confirmedRevenue > 0 ? `R$ ${f.brl2(d.confirmedRevenue)} bruto` : 'reservas confirmadas';
+
+    // Chart
+    if (d.daily.length > 0) {
+      drawBarChart('chartRezdy',
+        d.daily.map(r => f.dd(r.date)),
+        d.daily.map(r => r.confirmed),
+        d.daily.map(r => r.total),
+        C.rezdy, C.accent, 'Confirmadas', 'Total');
+    }
+
+    // Status list
+    const statusEl = document.getElementById('rzdyStatusList');
+    if (d.byStatus.length === 0) {
+      statusEl.innerHTML = '<div class="rzdy-loading">Sem reservas no período selecionado.</div>';
+    } else {
+      const maxCount = d.byStatus[0]?.count || 1;
+      statusEl.innerHTML = `
+        <table class="rzdy-table">
+          <thead><tr><th>Status</th><th>Qtd</th><th>Receita</th><th></th></tr></thead>
+          <tbody>
+            ${d.byStatus.map(s => {
+              const chipClass =
+                s.status === 'CONFIRMED'                         ? 'confirmed' :
+                s.status === 'CANCELLED'                         ? 'cancelled' :
+                (s.status === 'ABANDONED_CART' || s.status === 'ABANDONED') ? 'abandoned' :
+                'unknown';
+              const barColor = s.status === 'CONFIRMED' ? C.rezdy : C.muted;
+              return `<tr>
+                <td><span class="status-chip ${chipClass}">${s.status}</span></td>
+                <td>${f.num(s.count)}</td>
+                <td class="dim">${s.revenue > 0 ? 'R$ ' + f.brl2(s.revenue) : '—'}</td>
+                <td style="width:70px;padding-right:0">
+                  <div class="bar-track" style="margin:0">
+                    <div class="bar-fill" style="width:${(s.count/maxCount*100).toFixed(1)}%;background:${barColor}"></div>
+                  </div>
+                </td>
+              </tr>`;
+            }).join('')}
+          </tbody>
+        </table>`;
+    }
+
+    // Coupon list
+    const couponEl = document.getElementById('rzdyCouponList');
+    if (d.coupons.length === 0) {
+      couponEl.innerHTML = '<div class="rzdy-loading">Nenhum cupom utilizado no período.</div>';
+    } else {
+      couponEl.innerHTML = `
+        <table class="rzdy-table">
+          <thead><tr><th>Código</th><th>Usos</th><th>Receita Bruta</th></tr></thead>
+          <tbody>
+            ${d.coupons.map(c => `
+              <tr>
+                <td><span class="coupon-code">${c.code}</span></td>
+                <td>${f.num(c.count)}</td>
+                <td>R$ ${f.brl2(c.revenue)}</td>
+              </tr>`).join('')}
+          </tbody>
+        </table>`;
+    }
+  }
+
+  /* ────────────────────────────────────────────────────────────────────────
+     INSTAGRAM ORGANIC (via Windsor.ai)
+  ──────────────────────────────────────────────────────────────────────── */
+  async function loadOrganicIG(from, to) {
+    const grid    = document.getElementById('igOrganicGrid');
+    const emptyEl = document.getElementById('igEmpty');
+    if (!grid) return;
+
+    const url = `${API_BASE}?api_key=${API_KEY}&date_from=${from}&date_to=${to}&fields=${IG_FIELDS}`;
+
+    try {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const json = await res.json();
+      const all = json.data || [];
+
+      // Windsor.ai organic Instagram datasource names (try all variants)
+      const igKeys = ['instagram_insights', 'instagram_organic', 'instagram_business', 'instagram'];
+      let posts = all.filter(r => igKeys.includes((r.datasource || '').toLowerCase()));
+
+      // Fallback: any row with a valid instagram permalink
+      if (posts.length === 0) {
+        posts = all.filter(r => (r.permalink || '').includes('instagram.com'));
+      }
+
+      if (posts.length > 0) {
+        renderOrganic(posts);
+      } else {
+        if (emptyEl) emptyEl.innerHTML =
+          'Sem dados orgânicos no período.<br>' +
+          '<span style="font-size:10px;color:var(--dim)">Verifique se a conta Instagram está conectada no Windsor.ai com o conector <em>instagram_insights</em>.</span>';
+      }
+    } catch (e) {
+      console.warn('Instagram organic:', e.message);
+      if (emptyEl) emptyEl.innerHTML =
+        'Windsor.ai indisponível em acesso direto (CORS).<br>' +
+        '<span style="font-size:10px;color:var(--dim)">Dados orgânicos do Instagram serão exibidos quando acessado via backend ou proxy.</span>';
+    }
+  }
+
+  function renderOrganic(posts) {
+    const grid   = document.getElementById('igOrganicGrid');
+    const kpiRow = document.getElementById('igKpiRow');
+    if (!grid) return;
+
+    // Deduplicate by post_id
+    const postMap = {};
+    posts.forEach(p => {
+      const key = p.post_id || p.permalink || (p.date + '_' + (p.like_count||0));
+      if (!postMap[key] || (p.date || '') > (postMap[key].date || '')) postMap[key] = p;
+    });
+    const unique = Object.values(postMap).sort((a, b) => (b.date||'').localeCompare(a.date||''));
+
+    // Aggregate KPIs
+    const totalReach       = unique.reduce((s, p) => s + (p.reach        || 0), 0);
+    const totalImpressions = unique.reduce((s, p) => s + (p.impressions  || 0), 0);
+    const totalEngagement  = unique.reduce((s, p) => s + (p.like_count   || 0) + (p.comments_count || 0), 0);
+
+    const igReach = document.getElementById('ig-reach');
+    const igImpr  = document.getElementById('ig-impressions');
+    const igEng   = document.getElementById('ig-engagement');
+    const igPosts = document.getElementById('ig-posts');
+    if (igReach) igReach.innerHTML = `<b>${f.num(totalReach)}</b>`;
+    if (igImpr)  igImpr.innerHTML  = `<b>${f.num(totalImpressions)}</b>`;
+    if (igEng)   igEng.innerHTML   = `<b>${f.num(totalEngagement)}</b>`;
+    if (igPosts) igPosts.innerHTML = `<b>${f.num(unique.length)}</b>`;
+    if (kpiRow)  kpiRow.style.display = '';
+
+    if (unique.length === 0) {
+      grid.innerHTML = '<div class="post-empty">Nenhum post encontrado no período.</div>';
+      return;
+    }
+
+    grid.innerHTML = unique.slice(0, 30).map(p => {
+      const mtype     = (p.media_type || '').toUpperCase();
+      const badge     = mtype === 'VIDEO' ? 'Vídeo' : mtype === 'CAROUSEL_ALBUM' ? 'Carrossel' : mtype === 'IMAGE' ? 'Imagem' : mtype === 'REELS' ? 'Reels' : '';
+      const thumb     = p.thumbnail_url || p.media_url || '';
+      const permalink = p.permalink || '#';
+      const likes     = f.num(p.like_count     || 0);
+      const comments  = f.num(p.comments_count || 0);
+      const reach     = f.num(p.reach          || 0);
+      const saved     = f.num(p.saved          || 0);
+      const dateStr   = p.date ? f.display(p.date) : '—';
+
+      return `
+        <div class="post-card">
+          <div class="post-thumb-wrap">
+            ${thumb
+              ? `<img class="post-thumb" src="${thumb}" alt="Post Instagram" loading="lazy"
+                      onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
+              : ''}
+            <div class="post-thumb-placeholder" style="${thumb ? 'display:none' : ''}">📸</div>
+            ${badge ? `<span class="post-media-badge">${badge}</span>` : ''}
+          </div>
+          <div class="post-info">
+            <div class="post-date">${dateStr}</div>
+            <div class="post-stat-row">
+              <div class="post-stat"><span class="post-stat-val">${likes}</span><span class="post-stat-lbl">Curtidas</span></div>
+              <div class="post-stat"><span class="post-stat-val">${comments}</span><span class="post-stat-lbl">Coment.</span></div>
+              <div class="post-stat"><span class="post-stat-val">${reach}</span><span class="post-stat-lbl">Alcance</span></div>
+              <div class="post-stat"><span class="post-stat-val">${saved}</span><span class="post-stat-lbl">Salvos</span></div>
+            </div>
+            <a class="post-link" href="${permalink}" target="_blank" rel="noopener noreferrer">Ver post ↗</a>
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  /* ────────────────────────────────────────────────────────────────────────
+     LOAD DATA (Windsor.ai)
   ──────────────────────────────────────────────────────────────────────── */
   async function loadData(from, to) {
     const overlay = document.getElementById('loadingOverlay');
@@ -1146,6 +1595,9 @@ canvas { display: block; width: 100%; }
     renderMeta(d);
     renderGoogle(d);
     renderGA4(d);
+
+    // Load organic Instagram (non-blocking)
+    loadOrganicIG(from, to);
   }
 
   /* ────────────────────────────────────────────────────────────────────────
@@ -1229,12 +1681,23 @@ canvas { display: block; width: 100%; }
     {"date":"2026-06-24","datasource":"googleanalytics4","source":"google","campaign":"(organic)","clicks":null,"sessions":85,"spend":null},
   ];
 
-  /* ── Boot with default 7d ─────────────────────────────────────────────── */
+  /* ── Boot ─────────────────────────────────────────────────────────────── */
   const today = todayISO();
   const defaultFrom = addDays(today, -6);
   calState.startDate = defaultFrom;
   calState.endDate   = today;
+
+  // Load Windsor.ai data
   loadData(defaultFrom, today);
+
+  // Load Rezdy data in parallel (non-blocking)
+  loadRezdyData().then(() => {
+    if (REZDY_BOOKINGS !== null) {
+      const rz = processRezdy(REZDY_BOOKINGS, defaultFrom, today);
+      window._rzData = rz;
+      renderRezdy(rz);
+    }
+  });
 
 })();
 </script>
