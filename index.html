@@ -916,7 +916,8 @@ canvas { display: block; width: 100%; }
     if (prevBtn) {
       const minMonth = new Date(); minMonth.setMonth(minMonth.getMonth() - 3);
       prevBtn.disabled = lDate <= new Date(minMonth.getFullYear(), minMonth.getMonth(), 1);
-      prevBtn.addEventListener('click', () => {
+      prevBtn.addEventListener('click', e => {
+        e.stopPropagation();
         calState.viewLeft = new Date(lDate.getFullYear(), lDate.getMonth() - 1, 1);
         renderCalendar();
       });
@@ -924,14 +925,15 @@ canvas { display: block; width: 100%; }
     if (nextBtn) {
       const today2 = new Date();
       nextBtn.disabled = new Date(lDate.getFullYear(), lDate.getMonth() + 1, 1) > today2;
-      nextBtn.addEventListener('click', () => {
+      nextBtn.addEventListener('click', e => {
+        e.stopPropagation();
         calState.viewLeft = new Date(lDate.getFullYear(), lDate.getMonth() + 1, 1);
         renderCalendar();
       });
     }
 
     container.querySelectorAll('.cal-day:not(:disabled):not(.cal-day-empty)').forEach(btn => {
-      btn.addEventListener('click', () => onDayClick(btn.dataset.iso));
+      btn.addEventListener('click', e => { e.stopPropagation(); onDayClick(btn.dataset.iso); });
       btn.addEventListener('mouseenter', () => {
         if (calState.picking === 'end') {
           calState.hovering = btn.dataset.iso;
