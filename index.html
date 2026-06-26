@@ -1218,33 +1218,41 @@ canvas { display: block; width: 100%; }
     return clean.length > max ? clean.slice(0, max) + '…' : clean;
   }
 
+  const EMPTY_STATE = '<div style="text-align:center;padding:28px 0;color:var(--muted);font-size:11px">Sem dados no período</div>';
+
   function renderMeta(d) {
     const m   = d.meta;
     const cpc = m.clicks > 0 ? m.total / m.clicks : 0;
-    document.getElementById('m-spend').innerHTML  = `<span class="kpi-unit">R$</span> <b>${Math.round(m.total).toLocaleString('pt-BR')}</b>`;
-    document.getElementById('m-clicks').innerHTML = `<b>${f.num(m.clicks)}</b>`;
-    document.getElementById('m-cpc').innerHTML    = `<span class="kpi-unit">R$</span> <b>${f.brl2(cpc)}</b>`;
-    document.getElementById('m-camps').innerHTML  = `<b>${new Set(m.rows.map(r=>r.campaign)).size}</b>`;
+    document.getElementById('m-spend').innerHTML      = `<span class="kpi-unit">R$</span> <b>${Math.round(m.total).toLocaleString('pt-BR')}</b>`;
+    document.getElementById('m-clicks').innerHTML     = `<b>${f.num(m.clicks)}</b>`;
+    document.getElementById('m-cpc').innerHTML        = `<span class="kpi-unit">R$</span> <b>${f.brl2(cpc)}</b>`;
+    document.getElementById('m-camps').innerHTML      = `<b>${new Set(m.rows.map(r=>r.campaign)).size}</b>`;
+    document.getElementById('m-spend-sub').textContent = 'período selecionado';
     const labels = m.daily.map(r=>f.dd(r.date));
     drawBarChart('chartMeta', labels, m.daily.map(r=>r.spend), m.daily.map(r=>r.clicks), C.meta, C.accent, 'Investimento','Cliques');
-    const maxC = Math.max(...m.camps.map(c=>c.clicks)) || 1;
-    document.getElementById('metaClickBars').innerHTML = m.camps.slice(0,6).map(c => `
-      <div class="bar-row">
-        <span class="bar-label" title="${c.name}">${shortName(c.name)}</span>
-        <div class="bar-track"><div class="bar-fill" style="width:${(c.clicks/maxC*100).toFixed(1)}%;background:${C.meta}"></div></div>
-        <span class="bar-val">${f.num(c.clicks)}</span>
-        <span class="bar-pct">${f.pct(c.clicks/m.clicks*100)}</span>
-      </div>`).join('');
-    const maxS = m.camps[0]?.spend || 1;
-    document.getElementById('metaCamps').innerHTML = m.camps.slice(0,8).map(c => `
-      <div class="camp-item">
-        <div class="camp-header">
-          <span class="camp-name"><span class="camp-dot" style="background:${C.meta}"></span>${shortName(c.name,50)}</span>
-          <span class="camp-spend">${f.brl(c.spend)}</span>
-          <span class="camp-clicks">${f.num(c.clicks)} cliq.</span>
-        </div>
-        <div class="camp-track"><div class="camp-fill" style="width:${(c.spend/maxS*100).toFixed(1)}%;background:${C.meta}"></div></div>
-      </div>`).join('');
+    if (m.camps.length === 0) {
+      document.getElementById('metaClickBars').innerHTML = EMPTY_STATE;
+      document.getElementById('metaCamps').innerHTML     = EMPTY_STATE;
+    } else {
+      const maxC = Math.max(...m.camps.map(c=>c.clicks)) || 1;
+      document.getElementById('metaClickBars').innerHTML = m.camps.slice(0,6).map(c => `
+        <div class="bar-row">
+          <span class="bar-label" title="${c.name}">${shortName(c.name)}</span>
+          <div class="bar-track"><div class="bar-fill" style="width:${(c.clicks/maxC*100).toFixed(1)}%;background:${C.meta}"></div></div>
+          <span class="bar-val">${f.num(c.clicks)}</span>
+          <span class="bar-pct">${f.pct(m.clicks > 0 ? c.clicks/m.clicks*100 : 0)}</span>
+        </div>`).join('');
+      const maxS = m.camps[0]?.spend || 1;
+      document.getElementById('metaCamps').innerHTML = m.camps.slice(0,8).map(c => `
+        <div class="camp-item">
+          <div class="camp-header">
+            <span class="camp-name"><span class="camp-dot" style="background:${C.meta}"></span>${shortName(c.name,50)}</span>
+            <span class="camp-spend">${f.brl(c.spend)}</span>
+            <span class="camp-clicks">${f.num(c.clicks)} cliq.</span>
+          </div>
+          <div class="camp-track"><div class="camp-fill" style="width:${(c.spend/maxS*100).toFixed(1)}%;background:${C.meta}"></div></div>
+        </div>`).join('');
+    }
   }
 
   function renderGoogle(d) {
@@ -1256,24 +1264,29 @@ canvas { display: block; width: 100%; }
     document.getElementById('g-camps').innerHTML  = `<b>${new Set(g.rows.map(r=>r.campaign)).size}</b>`;
     const labels = g.daily.map(r=>f.dd(r.date));
     drawBarChart('chartGoogle', labels, g.daily.map(r=>r.spend), g.daily.map(r=>r.clicks), C.google, C.accent, 'Investimento','Cliques');
-    const maxC = Math.max(...g.camps.map(c=>c.clicks)) || 1;
-    document.getElementById('googleClickBars').innerHTML = g.camps.slice(0,6).map(c => `
-      <div class="bar-row">
-        <span class="bar-label" title="${c.name}">${shortName(c.name)}</span>
-        <div class="bar-track"><div class="bar-fill" style="width:${(c.clicks/maxC*100).toFixed(1)}%;background:${C.google}"></div></div>
-        <span class="bar-val">${f.num(c.clicks)}</span>
-        <span class="bar-pct">${f.pct(c.clicks/g.clicks*100)}</span>
-      </div>`).join('');
-    const maxS2 = g.camps[0]?.spend || 1;
-    document.getElementById('googleCamps').innerHTML = g.camps.slice(0,8).map(c => `
-      <div class="camp-item">
-        <div class="camp-header">
-          <span class="camp-name"><span class="camp-dot" style="background:${C.google}"></span>${shortName(c.name,50)}</span>
-          <span class="camp-spend">${f.brl(c.spend)}</span>
-          <span class="camp-clicks">${f.num(c.clicks)} cliq.</span>
-        </div>
-        <div class="camp-track"><div class="camp-fill" style="width:${(c.spend/maxS2*100).toFixed(1)}%;background:${C.google}"></div></div>
-      </div>`).join('');
+    if (g.camps.length === 0) {
+      document.getElementById('googleClickBars').innerHTML = EMPTY_STATE;
+      document.getElementById('googleCamps').innerHTML     = EMPTY_STATE;
+    } else {
+      const maxC = Math.max(...g.camps.map(c=>c.clicks)) || 1;
+      document.getElementById('googleClickBars').innerHTML = g.camps.slice(0,6).map(c => `
+        <div class="bar-row">
+          <span class="bar-label" title="${c.name}">${shortName(c.name)}</span>
+          <div class="bar-track"><div class="bar-fill" style="width:${(c.clicks/maxC*100).toFixed(1)}%;background:${C.google}"></div></div>
+          <span class="bar-val">${f.num(c.clicks)}</span>
+          <span class="bar-pct">${f.pct(g.clicks > 0 ? c.clicks/g.clicks*100 : 0)}</span>
+        </div>`).join('');
+      const maxS2 = g.camps[0]?.spend || 1;
+      document.getElementById('googleCamps').innerHTML = g.camps.slice(0,8).map(c => `
+        <div class="camp-item">
+          <div class="camp-header">
+            <span class="camp-name"><span class="camp-dot" style="background:${C.google}"></span>${shortName(c.name,50)}</span>
+            <span class="camp-spend">${f.brl(c.spend)}</span>
+            <span class="camp-clicks">${f.num(c.clicks)} cliq.</span>
+          </div>
+          <div class="camp-track"><div class="camp-fill" style="width:${(c.spend/maxS2*100).toFixed(1)}%;background:${C.google}"></div></div>
+        </div>`).join('');
+    }
   }
 
   function renderGA4(d) {
@@ -1289,20 +1302,24 @@ canvas { display: block; width: 100%; }
     drawBarChart('chartGA4', labels, a.daily.map(r=>r.sessions), null, C.ga4, null, 'Sessões', null);
     const maxS = a.sources[0]?.[1] || 1;
     const srcColors = { ig:C.meta, facebook:C.meta, google:C.google, Direto:C.accent };
-    document.getElementById('ga4SourceBars').innerHTML = a.sources.slice(0,8).map(([src,n]) => `
-      <div class="bar-row">
-        <span class="bar-label" style="text-transform:none">${src}</span>
-        <div class="bar-track"><div class="bar-fill" style="width:${(n/maxS*100).toFixed(1)}%;background:${srcColors[src]||C.muted}"></div></div>
-        <span class="bar-val">${f.num(n)}</span>
-        <span class="bar-pct">${f.pct(n/a.total*100)}</span>
-      </div>`).join('');
+    document.getElementById('ga4SourceBars').innerHTML = a.sources.length === 0
+      ? EMPTY_STATE
+      : a.sources.slice(0,8).map(([src,n]) => `
+        <div class="bar-row">
+          <span class="bar-label" style="text-transform:none">${src}</span>
+          <div class="bar-track"><div class="bar-fill" style="width:${(n/maxS*100).toFixed(1)}%;background:${srcColors[src]||C.muted}"></div></div>
+          <span class="bar-val">${f.num(n)}</span>
+          <span class="bar-pct">${f.pct(a.total > 0 ? n/a.total*100 : 0)}</span>
+        </div>`).join('');
     const tbody = document.querySelector('#ga4CampTable tbody');
-    tbody.innerHTML = a.camps.map(r => `
-      <tr>
-        <td title="${r.camp}">${shortName(r.camp,38)}</td>
-        <td class="dim">${r.src}</td>
-        <td>${f.num(r.sessions)}</td>
-      </tr>`).join('');
+    tbody.innerHTML = a.camps.length === 0
+      ? `<tr><td colspan="3" style="text-align:center;padding:24px 0;color:var(--muted)">Sem dados no período</td></tr>`
+      : a.camps.map(r => `
+        <tr>
+          <td title="${r.camp}">${shortName(r.camp,38)}</td>
+          <td class="dim">${r.src}</td>
+          <td>${f.num(r.sessions)}</td>
+        </tr>`).join('');
   }
 
   function redrawActive() {
@@ -1313,9 +1330,7 @@ canvas { display: block; width: 100%; }
     if (active==='ga4'    && d) { drawBarChart('chartGA4',    d.ga4.daily.map(r=>f.dd(r.date)),    d.ga4.daily.map(r=>r.sessions), null, C.ga4, null,'Sessões',null); }
     if (active==='rezdy' && window._rzData) {
       const rz = window._rzData;
-      if (rz.daily.length > 0) {
-        drawBarChart('chartRezdy', rz.daily.map(r=>f.dd(r.date)), rz.daily.map(r=>r.confirmed), rz.daily.map(r=>r.total), C.rezdy, C.accent, 'Confirmadas', 'Total');
-      }
+      drawBarChart('chartRezdy', rz.daily.map(r=>f.dd(r.date)), rz.daily.map(r=>r.confirmed), rz.daily.map(r=>r.total), C.rezdy, C.accent, 'Confirmadas', 'Total');
     }
   }
 
@@ -1402,14 +1417,12 @@ canvas { display: block; width: 100%; }
     document.getElementById('rz-confirmed-sub').textContent =
       d.confirmedRevenue > 0 ? `R$ ${f.brl2(d.confirmedRevenue)} bruto` : 'reservas confirmadas';
 
-    // Chart
-    if (d.daily.length > 0) {
-      drawBarChart('chartRezdy',
-        d.daily.map(r => f.dd(r.date)),
-        d.daily.map(r => r.confirmed),
-        d.daily.map(r => r.total),
-        C.rezdy, C.accent, 'Confirmadas', 'Total');
-    }
+    // Chart (always called — drawBarChart clears canvas even when no data)
+    drawBarChart('chartRezdy',
+      d.daily.map(r => f.dd(r.date)),
+      d.daily.map(r => r.confirmed),
+      d.daily.map(r => r.total),
+      C.rezdy, C.accent, 'Confirmadas', 'Total');
 
     // Status list
     const statusEl = document.getElementById('rzdyStatusList');
@@ -1597,8 +1610,12 @@ canvas { display: block; width: 100%; }
       badge.style.cssText = 'color:var(--muted);border-color:var(--dim)';
       const b = document.getElementById('errBanner');
       b.style.display = 'block';
-      b.textContent = 'Windsor.ai indisponível (CORS em browser direto) — usando snapshot embutido com dados reais de 18–24/06.';
-      rows = SNAPSHOT;
+      const snapshotFiltered = SNAPSHOT.filter(r => r.date >= from && r.date <= to);
+      rows = snapshotFiltered.length > 0 ? snapshotFiltered : [];
+      const snapshotNote = snapshotFiltered.length > 0
+        ? 'usando snapshot embutido (dados reais 18–24/Jun) — sem acesso ao Windsor.ai via browser.'
+        : 'snapshot embutido (18–24/Jun) fora do período selecionado — sem dados disponíveis.';
+      b.textContent = snapshotNote;
     } finally {
       overlay.classList.remove('show');
     }
