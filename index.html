@@ -48,6 +48,7 @@ header {
   padding: 16px 28px 14px;
   border-bottom: 1px solid var(--border);
   position: relative;
+  z-index: 600;
 }
 header::after {
   content: '';
@@ -1591,7 +1592,7 @@ canvas { display: block; width: 100%; }
     const overlay = document.getElementById('loadingOverlay');
     const badge   = document.getElementById('statusBadge');
     overlay.classList.add('show');
-    badge.textContent = 'carregando'; badge.className = 'status-badge loading';
+    badge.textContent = 'carregando'; badge.className = 'status-badge loading'; badge.style.cssText = '';
 
     const url = `${API_BASE}?api_key=${API_KEY}&date_from=${from}&date_to=${to}&fields=${API_FIELDS}`;
     let rows;
@@ -1610,12 +1611,8 @@ canvas { display: block; width: 100%; }
       badge.style.cssText = 'color:var(--muted);border-color:var(--dim)';
       const b = document.getElementById('errBanner');
       b.style.display = 'block';
-      const snapshotFiltered = SNAPSHOT.filter(r => r.date >= from && r.date <= to);
-      rows = snapshotFiltered.length > 0 ? snapshotFiltered : [];
-      const snapshotNote = snapshotFiltered.length > 0
-        ? 'usando snapshot embutido (dados reais 18–24/Jun) — sem acesso ao Windsor.ai via browser.'
-        : 'snapshot embutido (18–24/Jun) fora do período selecionado — sem dados disponíveis.';
-      b.textContent = snapshotNote;
+      b.textContent = 'Windsor.ai sem acesso direto (CORS) — exibindo snapshot de referência 18–24/Jun.';
+      rows = SNAPSHOT;
     } finally {
       overlay.classList.remove('show');
     }
